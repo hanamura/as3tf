@@ -54,22 +54,20 @@ package org.typefest.proc {
 		//---------------------------------------
 		private var __ed:EventDispatcher = null;
 		
-		protected var _id:int       = 0;
-		protected var _state:String = null;
+		private var __id:int       = 0;
+		private var __state:String = null;
 		
-		protected var _listenerFuncs:Dictionary = null;
-		
-		protected var _sleepFunc:Function   = null;
-		protected var _stoppedFunc:Function = null;
-		
-		protected var _calledNamespacedFuncs:Dictionary = null;
-		protected var _calledNormalFuncs:Dictionary     = null;
+		private var __listenerFuncs:Dictionary         = null;
+		private var __sleepFunc:Function               = null;
+		private var __stoppedFunc:Function             = null;
+		private var __calledNamespacedFuncs:Dictionary = null;
+		private var __calledNormalFuncs:Dictionary     = null;
 		
 		public function get id():int {
-			return this._id;
+			return this.__id;
 		}
 		public function get state():String {
-			return this._state;
+			return this.__state;
 		}
 		
 		//---------------------------------------
@@ -80,8 +78,8 @@ package org.typefest.proc {
 			
 			this.__ed = new EventDispatcher(this);
 			
-			this._id    = ++__idCount;
-			this._state = NEW;
+			this.__id    = ++__idCount;
+			this.__state = NEW;
 			
 			__retain(this);
 		}
@@ -90,34 +88,34 @@ package org.typefest.proc {
 		// Interface
 		//---------------------------------------
 		public function fire():void {
-			if(this._state !== NEW) {
+			if(this.__state !== NEW) {
 				throw new IllegalOperationError("Illegal timing.");
 			}
 			this._startTriggered();
 		}
 		
 		public function start():void {
-			if(this._state !== NEW) {
+			if(this.__state !== NEW) {
 				throw new IllegalOperationError("Illegal timing.");
 			}
-			this._state = STARTING;
+			this.__state = STARTING;
 			_delay.add(this._startTriggered, "1 frame");
 		}
 		
 		public function stop():void {
-			if(this._state === PROCESSING) {
-				this._state = STOPPING;
+			if(this.__state === PROCESSING) {
+				this.__state = STOPPING;
 				
 				var fn:Function;
-				if(this._stoppedFunc !== null) {
-					fn = this._stoppedFunc;
+				if(this.__stoppedFunc !== null) {
+					fn = this.__stoppedFunc;
 				} else {
 					fn = this._defaultStopped;
 				}
 				this._drop();
 				fn();
-			} else if(this._state === STARTING) {
-				this._state = STOPPING;
+			} else if(this.__state === STARTING) {
+				this.__state = STOPPING;
 				
 				_delay.remove(this._startTriggered);
 				_delay.add(this._end, "1 frame");
@@ -151,16 +149,16 @@ package org.typefest.proc {
 			listener:Function,
 			priority:int = 0
 		):void {
-			if(!this._listenerFuncs) {
-				this._listenerFuncs = new Dictionary(false);
+			if(!this.__listenerFuncs) {
+				this.__listenerFuncs = new Dictionary(false);
 			}
-			if(!this._listenerFuncs[dispatcher]) {
-				this._listenerFuncs[dispatcher] = new Dictionary(false);
+			if(!this.__listenerFuncs[dispatcher]) {
+				this.__listenerFuncs[dispatcher] = new Dictionary(false);
 			}
-			if(this._listenerFuncs[dispatcher][type]) {
+			if(this.__listenerFuncs[dispatcher][type]) {
 				dispatcher.removeEventListener(type, this._listenTriggered);
 			}
-			this._listenerFuncs[dispatcher][type] = listener;
+			this.__listenerFuncs[dispatcher][type] = listener;
 			dispatcher.addEventListener(
 				type,
 				this._listenTriggered,
@@ -174,25 +172,25 @@ package org.typefest.proc {
 			time:*,
 			fn:Function
 		):void {
-			if(this._state !== PROCESSING) {
+			if(this.__state !== PROCESSING) {
 				throw new IllegalOperationError("Illegal timing.");
 			}
 			
-			if(this._sleepFunc !== null) {
+			if(this.__sleepFunc !== null) {
 				_delay.remove(this._sleepTriggered);
 			}
-			this._sleepFunc = fn;
+			this.__sleepFunc = fn;
 			_delay.add(this._sleepTriggered, time);
 		}
 		
 		public function stopped(
 			fn:Function
 		):void {
-			if(this._state !== PROCESSING) {
+			if(this.__state !== PROCESSING) {
 				throw new IllegalOperationError("Illegal timing");
 			}
 			
-			this._stoppedFunc = fn;
+			this.__stoppedFunc = fn;
 		}
 		
 		public function called(
@@ -200,18 +198,18 @@ package org.typefest.proc {
 			fn:Function
 		):* {
 			if(name is QName && name.uri !== "") {
-				if(!this._calledNamespacedFuncs) {
-					this._calledNamespacedFuncs = new Dictionary(false);
+				if(!this.__calledNamespacedFuncs) {
+					this.__calledNamespacedFuncs = new Dictionary(false);
 				}
-				if(!this._calledNamespacedFuncs[name.uri]) {
-					this._calledNamespacedFuncs[name.uri] = new Dictionary(false);
+				if(!this.__calledNamespacedFuncs[name.uri]) {
+					this.__calledNamespacedFuncs[name.uri] = new Dictionary(false);
 				}
-				this._calledNamespacedFuncs[name.uri][name.localName] = fn;
+				this.__calledNamespacedFuncs[name.uri][name.localName] = fn;
 			} else {
-				if(!this._calledNormalFuncs) {
-					this._calledNormalFuncs = new Dictionary(false);
+				if(!this.__calledNormalFuncs) {
+					this.__calledNormalFuncs = new Dictionary(false);
 				}
-				this._calledNormalFuncs[String(name)] = fn;
+				this.__calledNormalFuncs[String(name)] = fn;
 			}
 		}
 		
@@ -219,35 +217,35 @@ package org.typefest.proc {
 		// Drop All Registrations
 		//---------------------------------------
 		protected function _drop():void {
-			for(var dispatcher:* in this._listenerFuncs) {
-				for(var type:String in this._listenerFuncs[dispatcher]) {
+			for(var dispatcher:* in this.__listenerFuncs) {
+				for(var type:String in this.__listenerFuncs[dispatcher]) {
 					dispatcher.removeEventListener(type, this._listenTriggered);
 				}
 			}
-			this._listenerFuncs = null;
+			this.__listenerFuncs = null;
 			
-			if(this._sleepFunc !== null) {
+			if(this.__sleepFunc !== null) {
 				_delay.remove(this._sleepTriggered);
-				this._sleepFunc = null;
+				this.__sleepFunc = null;
 			}
 			
-			this._stoppedFunc = null;
+			this.__stoppedFunc = null;
 			
-			this._calledNamespacedFuncs = null;
-			this._calledNormalFuncs     = null;
+			this.__calledNamespacedFuncs = null;
+			this.__calledNormalFuncs     = null;
 		}
 		
 		//---------------------------------------
 		// Triggereds
 		//---------------------------------------
 		protected function _listenTriggered(e:Event):void {
-			var fn:Function = this._listenerFuncs[e.currentTarget][e.type];
+			var fn:Function = this.__listenerFuncs[e.currentTarget][e.type];
 			this._drop();
 			fn(e);
 		}
 		
 		protected function _sleepTriggered():void {
-			var fn:Function = this._sleepFunc;
+			var fn:Function = this.__sleepFunc;
 			this._drop();
 			fn();
 		}
@@ -256,7 +254,7 @@ package org.typefest.proc {
 		// Internal
 		//---------------------------------------
 		protected function _startTriggered():void {
-			this._state = PROCESSING;
+			this.__state = PROCESSING;
 			this._start();
 			this.dispatchEvent(new ProcEvent(ProcEvent.START));
 		}
@@ -266,15 +264,15 @@ package org.typefest.proc {
 		}
 		
 		protected function _end():void {
-			if(this._state === NEW || this._state === END) {
+			if(this.__state === NEW || this.__state === END) {
 				throw new IllegalOperationError("Illegal timing.");
-			} else if(this._state === STARTING) {
+			} else if(this.__state === STARTING) {
 				_delay.remove(this._startTriggered);
 			}
 			
 			this._drop();
 			
-			this._state = END;
+			this.__state = END;
 			this.dispatchEvent(new ProcEvent(ProcEvent.END));
 			this._finalize();
 			
@@ -294,18 +292,18 @@ package org.typefest.proc {
 			
 			if(name is QName && name.uri !== "") {
 				if(
-					this._calledNamespacedFuncs
-					&& name.uri in this._calledNamespacedFuncs
-					&& name.localName in this._calledNamespacedFuncs[name.uri]
+					this.__calledNamespacedFuncs
+					&& name.uri in this.__calledNamespacedFuncs
+					&& name.localName in this.__calledNamespacedFuncs[name.uri]
 				) {
-					fn = this._calledNamespacedFuncs[name.uri][name.localName];
+					fn = this.__calledNamespacedFuncs[name.uri][name.localName];
 				}
 			} else {
 				if(
-					this._calledNormalFuncs
-					&& strname in this._calledNormalFuncs
+					this.__calledNormalFuncs
+					&& strname in this.__calledNormalFuncs
 				) {
-					fn = this._calledNormalFuncs[strname];
+					fn = this.__calledNormalFuncs[strname];
 				}
 			}
 			
