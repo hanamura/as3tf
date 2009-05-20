@@ -102,6 +102,8 @@ package org.typefest.data.draft {
 		// Constructor
 		//---------------------------------------
 		public function ActiveListSet(init:* = null) {
+			super();
+			
 			this._ed = new EventDispatcher(this);
 			
 			this._olds    = new Dictionary();

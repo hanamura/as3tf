@@ -71,6 +71,8 @@ package org.typefest.data.draft {
 		/* = Constructor = */
 		/* =============== */
 		public function ActiveAttribute(init:* = null) {
+			super();
+			
 			this._ed = new EventDispatcher(this);
 			
 			if(init !== null) {
