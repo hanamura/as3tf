@@ -7,7 +7,6 @@ See LICENSE.txt for full license information.
 package org.typefest.net {
 	public class HTTPURL {
 		public static const HTTP_URL_EXP:RegExp = /^(https?|shttp):\/\/(?:((?:[-_.!~*'()a-zA-Z0-9;:&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)@)?((?:[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?\.)*[a-zA-Z](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?\.?|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(?::([0-9]*))?(\/(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*(?:;(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)*(?:\/(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*(?:;(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)*)*)?(?:\?((?:[-_.!~*'()a-zA-Z0-9;\/?:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*))?(?:#((?:[-_.!~*'()a-zA-Z0-9;\/?:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*))?$/;
-		/*'*/
 		
 		/*
 		*	var url:String = "http://typefest.org/one/two/three/file.html";
@@ -313,7 +312,7 @@ package org.typefest.net {
 					this._url = this._root;
 				}
 			} else {
-				throw new ArgumentError("HTTPURL: URL is not valid");
+				throw new ArgumentError("URL is not valid");
 			}
 		}
 		
