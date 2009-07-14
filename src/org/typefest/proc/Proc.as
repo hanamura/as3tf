@@ -20,6 +20,8 @@ package org.typefest.proc {
 	import flash.utils.flash_proxy;
 	import flash.utils.Proxy;
 	
+	import flash.utils.getQualifiedClassName;
+	
 	import org.typefest.time.draft.Delay;
 	
 	dynamic public class Proc extends Proxy implements IEventDispatcher {
@@ -254,6 +256,7 @@ package org.typefest.proc {
 		// Internal
 		//---------------------------------------
 		protected function _startTriggered():void {
+			this._drop();
 			this.__state = PROCESSING;
 			this._start();
 			this.dispatchEvent(new ProcEvent(ProcEvent.START));
@@ -355,6 +358,13 @@ package org.typefest.proc {
 		
 		public function willTrigger(t:String):Boolean {
 			return this.__ed.willTrigger(t);
+		}
+		
+		//---------------------------------------
+		// toString
+		//---------------------------------------
+		public function toString():String {
+			return "[Proc " + this.id.toString() + "]";
 		}
 	}
 }
