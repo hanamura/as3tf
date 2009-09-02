@@ -34,26 +34,26 @@ package org.typefest.adhoc.domain {
 		
 		public function DefinitionGetter(loader:Loader) {
 			super();
-			this._loader      = loader;
-			this._definitions = new Dictionary(false);
+			_loader      = loader;
+			_definitions = new Dictionary(false);
 		}
 		
 		public function get(name:String):* {
-			if (!(name in this._definitions)) {
+			if (!(name in _definitions)) {
 				try {
-					this._definitions[name] = this._loader.contentLoaderInfo
-					                                      .applicationDomain
-					                                      .getDefinition(name);
+					_definitions[name] = _loader.contentLoaderInfo
+					                            .applicationDomain
+					                            .getDefinition(name);
 				} catch (e:ReferenceError) {
-					this._definitions[name] = null;
+					_definitions[name] = null;
 				}
 			}
 			
-			return this._definitions[name];
+			return _definitions[name];
 		}
 		
 		public function create(name:String):* {
-			var definition:* = this.get(name);
+			var definition:* = get(name);
 			
 			return definition ? (new definition()) : null;
 		}
