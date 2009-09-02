@@ -28,7 +28,7 @@ package org.typefest.time {
 			var $:* = _frameexp.exec(time);
 			
 			if($) {
-				number = parseInt($[1]);
+				number = int($[1]);
 				frame  = true;
 			} else {
 				var unit:String;
@@ -38,17 +38,17 @@ package org.typefest.time {
 					unit = $[2].toLowerCase();
 					
 					if(unit in _units) {
-						number += _units[unit](parseFloat($[1]));
+						number += _units[unit](Number($[1]));
 					}
 					some = true;
 				}
 				
 				if(!some) {
-					number = parseFloat(time);
+					number = Number(time);
 				}
 			}
 		} else {
-			number = parseFloat(time);
+			number = Number(time);
 		}
 		
 		return isNaN(number) ? null
@@ -67,15 +67,15 @@ internal var _units:Dictionary = new Dictionary();
 _units["millisecond"] = _units["milliseconds"] = function(time:Number):Number {
 	return time / 1000;
 }
-_units["second"] = _units["seconds"] = _units["sec"] = function(time:Number):Number {
+_units["second"] = _units["seconds"] = _units["sec"] = _units["s"] = function(time:Number):Number {
 	return time;
 }
-_units["minute"] = _units["minutes"] = _units["min"] = function(time:Number):Number {
+_units["minute"] = _units["minutes"] = _units["min"] = _units["m"] = function(time:Number):Number {
 	return time * 60;
 }
-_units["hour"] = _units["hours"] = function(time:Number):Number {
+_units["hour"] = _units["hours"] = _units["h"] = function(time:Number):Number {
 	return time * 60 * 60;
 }
-_units["day"] = _units["days"] = function(time:Number):Number {
+_units["day"] = _units["days"] = _units["d"] = function(time:Number):Number {
 	return time * 60 * 60 * 24;
 }
