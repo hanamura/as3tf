@@ -4,6 +4,7 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.adhoc.domain {
+	import flash.display.Loader;
 	import flash.utils.Dictionary;
 	
 	public class DefinitionGetter extends Object {

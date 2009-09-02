@@ -35,18 +35,13 @@ package org.typefest.proc {
 		static private var __idCount:int        = 0;
 		
 		static private function __retain(proc:Proc):void {
-			if(proc.state === NEW && !(proc in __procs)) {
-				__procs[proc] = true;
-			} else {
-				throw new IllegalOperationError("Illegal timing.");
-			}
+			__procs[proc] = true;
 		}
 		static private function __release(proc:Proc):void {
-			if(proc.state === END && proc in __procs) {
-				delete __procs[proc];
-			} else {
-				throw new IllegalOperationError("Illegal timing.");
-			}
+			delete __procs[proc];
+		}
+		static private function __retained(proc:Proc):Boolean {
+			return proc in __procs;
 		}
 		
 		static protected var _delay:Delay = new Delay();
@@ -66,10 +61,10 @@ package org.typefest.proc {
 		private var __calledNormalFuncs:Dictionary     = null;
 		
 		public function get id():int {
-			return this.__id;
+			return __id;
 		}
 		public function get state():String {
-			return this.__state;
+			return __state;
 		}
 		
 		//---------------------------------------
@@ -78,51 +73,67 @@ package org.typefest.proc {
 		public function Proc() {
 			super();
 			
-			this.__ed = new EventDispatcher(this);
+			log("Proc");
 			
-			this.__id    = ++__idCount;
-			this.__state = NEW;
+			__ed = new EventDispatcher(this);
 			
+			__id    = ++__idCount;
+			__state = NEW;
+		}
+		
+		//---------------------------------------
+		// Retain and Release
+		//---------------------------------------
+		/*
+		// retain proc in static domain
+		var proc:Proc = new MyProc().retain();
+		*/
+		public function retain():Proc {
 			__retain(this);
+			return this;
+		}
+		public function release():Proc {
+			__release(this);
+			return this;
 		}
 		
 		//---------------------------------------
 		// Interface
 		//---------------------------------------
 		public function fire():void {
-			if(this.__state !== NEW) {
-				throw new IllegalOperationError("Illegal timing.");
+			if(__state !== NEW) {
+				throw new IllegalOperationError("Already started.");
 			}
-			this._startTriggered();
+			_startTriggered();
 		}
 		
 		public function start():void {
-			if(this.__state !== NEW) {
-				throw new IllegalOperationError("Illegal timing.");
+			if(__state !== NEW) {
+				throw new IllegalOperationError("Already started.");
 			}
-			this.__state = STARTING;
-			_delay.add(this._startTriggered, "1 frame");
+			__state = STARTING;
+			_delay.add(_startTriggered, "1 frame");
 		}
 		
 		public function stop():void {
-			if(this.__state === PROCESSING) {
-				this.__state = STOPPING;
+			if(__state === PROCESSING) {
+				__state = STOPPING;
 				
 				var fn:Function;
-				if(this.__stoppedFunc !== null) {
-					fn = this.__stoppedFunc;
+				if(__stoppedFunc !== null) {
+					fn = __stoppedFunc;
 				} else {
-					fn = this._defaultStopped;
+					fn = _defaultStopped;
 				}
-				this._drop();
+				_drop();
 				fn();
-			} else if(this.__state === STARTING) {
-				this.__state = STOPPING;
+			} else if(__state === STARTING) {
+				__state = STOPPING;
 				
-				_delay.remove(this._startTriggered);
-				_delay.add(this._end, "1 frame");
+				_delay.remove(_startTriggered);
+				_delay.add(_end, "1 frame");
 			} else {
-				throw new IllegalOperationError("Illegal timing.");
+				throw new IllegalOperationError("Not started or already stopped.");
 			}
 		}
 		
@@ -137,7 +148,7 @@ package org.typefest.proc {
 			// override this method or it throws runtime error
 			
 			throw new IllegalOperationError(
-				"Property \"" + String(name) + "\" not found."
+				  "Property \"" + String(name) + "\" not found."
 				+ " This method must be overridden to catch a property."
 			);
 		}
@@ -147,52 +158,58 @@ package org.typefest.proc {
 		//---------------------------------------
 		public function listen(
 			dispatcher:IEventDispatcher,
-			type:String,
+			types:*,
 			listener:Function,
 			priority:int = 0
 		):void {
-			if(!this.__listenerFuncs) {
-				this.__listenerFuncs = new Dictionary(false);
+			if (types is String) {
+				if (!__listenerFuncs) {
+					__listenerFuncs = new Dictionary(false);
+				}
+				if (!__listenerFuncs[dispatcher]) {
+					__listenerFuncs[dispatcher] = new Dictionary(false);
+				}
+				if (__listenerFuncs[dispatcher][types]) {
+					dispatcher.removeEventListener(types, _listenTriggered);
+				}
+				__listenerFuncs[dispatcher][types] = listener;
+				dispatcher.addEventListener(
+					types,
+					_listenTriggered,
+					false,
+					priority,
+					false
+				);
+			} else {
+				for each (var type:String in types) {
+					listen(dispatcher, type, listener, priority);
+				}
 			}
-			if(!this.__listenerFuncs[dispatcher]) {
-				this.__listenerFuncs[dispatcher] = new Dictionary(false);
-			}
-			if(this.__listenerFuncs[dispatcher][type]) {
-				dispatcher.removeEventListener(type, this._listenTriggered);
-			}
-			this.__listenerFuncs[dispatcher][type] = listener;
-			dispatcher.addEventListener(
-				type,
-				this._listenTriggered,
-				false,
-				priority,
-				false
-			);
 		}
 		
 		public function sleep(
 			time:*,
 			fn:Function
 		):void {
-			if(this.__state !== PROCESSING) {
+			if(__state !== PROCESSING) {
 				throw new IllegalOperationError("Illegal timing.");
 			}
 			
-			if(this.__sleepFunc !== null) {
-				_delay.remove(this._sleepTriggered);
+			if(__sleepFunc !== null) {
+				_delay.remove(_sleepTriggered);
 			}
-			this.__sleepFunc = fn;
-			_delay.add(this._sleepTriggered, time);
+			__sleepFunc = fn;
+			_delay.add(_sleepTriggered, time);
 		}
 		
 		public function stopped(
 			fn:Function
 		):void {
-			if(this.__state !== PROCESSING) {
+			if(__state !== PROCESSING) {
 				throw new IllegalOperationError("Illegal timing");
 			}
 			
-			this.__stoppedFunc = fn;
+			__stoppedFunc = fn;
 		}
 		
 		public function called(
@@ -200,18 +217,18 @@ package org.typefest.proc {
 			fn:Function
 		):* {
 			if(name is QName && name.uri !== "") {
-				if(!this.__calledNamespacedFuncs) {
-					this.__calledNamespacedFuncs = new Dictionary(false);
+				if(!__calledNamespacedFuncs) {
+					__calledNamespacedFuncs = new Dictionary(false);
 				}
-				if(!this.__calledNamespacedFuncs[name.uri]) {
-					this.__calledNamespacedFuncs[name.uri] = new Dictionary(false);
+				if(!__calledNamespacedFuncs[name.uri]) {
+					__calledNamespacedFuncs[name.uri] = new Dictionary(false);
 				}
-				this.__calledNamespacedFuncs[name.uri][name.localName] = fn;
+				__calledNamespacedFuncs[name.uri][name.localName] = fn;
 			} else {
-				if(!this.__calledNormalFuncs) {
-					this.__calledNormalFuncs = new Dictionary(false);
+				if(!__calledNormalFuncs) {
+					__calledNormalFuncs = new Dictionary(false);
 				}
-				this.__calledNormalFuncs[String(name)] = fn;
+				__calledNormalFuncs[String(name)] = fn;
 			}
 		}
 		
@@ -219,36 +236,36 @@ package org.typefest.proc {
 		// Drop All Registrations
 		//---------------------------------------
 		protected function _drop():void {
-			for(var dispatcher:* in this.__listenerFuncs) {
-				for(var type:String in this.__listenerFuncs[dispatcher]) {
-					dispatcher.removeEventListener(type, this._listenTriggered);
+			for(var dispatcher:* in __listenerFuncs) {
+				for(var type:String in __listenerFuncs[dispatcher]) {
+					dispatcher.removeEventListener(type, _listenTriggered);
 				}
 			}
-			this.__listenerFuncs = null;
+			__listenerFuncs = null;
 			
-			if(this.__sleepFunc !== null) {
-				_delay.remove(this._sleepTriggered);
-				this.__sleepFunc = null;
+			if(__sleepFunc !== null) {
+				_delay.remove(_sleepTriggered);
+				__sleepFunc = null;
 			}
 			
-			this.__stoppedFunc = null;
+			__stoppedFunc = null;
 			
-			this.__calledNamespacedFuncs = null;
-			this.__calledNormalFuncs     = null;
+			__calledNamespacedFuncs = null;
+			__calledNormalFuncs     = null;
 		}
 		
 		//---------------------------------------
 		// Triggereds
 		//---------------------------------------
 		protected function _listenTriggered(e:Event):void {
-			var fn:Function = this.__listenerFuncs[e.currentTarget][e.type];
-			this._drop();
+			var fn:Function = __listenerFuncs[e.currentTarget][e.type];
+			_drop();
 			fn(e);
 		}
 		
 		protected function _sleepTriggered():void {
-			var fn:Function = this.__sleepFunc;
-			this._drop();
+			var fn:Function = __sleepFunc;
+			_drop();
 			fn();
 		}
 		
@@ -256,10 +273,10 @@ package org.typefest.proc {
 		// Internal
 		//---------------------------------------
 		protected function _startTriggered():void {
-			this._drop();
-			this.__state = PROCESSING;
-			this._start();
-			this.dispatchEvent(new ProcEvent(ProcEvent.START));
+			_drop();
+			__state = PROCESSING;
+			_start();
+			dispatchEvent(new ProcEvent(ProcEvent.START));
 		}
 		
 		protected function _start():void {
@@ -267,17 +284,17 @@ package org.typefest.proc {
 		}
 		
 		protected function _end():void {
-			if(this.__state === NEW || this.__state === END) {
+			if(__state === NEW || __state === END) {
 				throw new IllegalOperationError("Illegal timing.");
-			} else if(this.__state === STARTING) {
-				_delay.remove(this._startTriggered);
+			} else if(__state === STARTING) {
+				_delay.remove(_startTriggered);
 			}
 			
-			this._drop();
+			_drop();
 			
-			this.__state = END;
-			this.dispatchEvent(new ProcEvent(ProcEvent.END));
-			this._finalize();
+			__state = END;
+			dispatchEvent(new ProcEvent(ProcEvent.END));
+			_finalize();
 			
 			__release(this);
 		}
@@ -295,18 +312,18 @@ package org.typefest.proc {
 			
 			if(name is QName && name.uri !== "") {
 				if(
-					this.__calledNamespacedFuncs
-					&& name.uri in this.__calledNamespacedFuncs
-					&& name.localName in this.__calledNamespacedFuncs[name.uri]
+					__calledNamespacedFuncs
+					&& name.uri in __calledNamespacedFuncs
+					&& name.localName in __calledNamespacedFuncs[name.uri]
 				) {
-					fn = this.__calledNamespacedFuncs[name.uri][name.localName];
+					fn = __calledNamespacedFuncs[name.uri][name.localName];
 				}
 			} else {
 				if(
-					this.__calledNormalFuncs
-					&& strname in this.__calledNormalFuncs
+					__calledNormalFuncs
+					&& strname in __calledNormalFuncs
 				) {
-					fn = this.__calledNormalFuncs[strname];
+					fn = __calledNormalFuncs[strname];
 				}
 			}
 			
@@ -318,12 +335,12 @@ package org.typefest.proc {
 			}
 			
 			if(fn !== null) {
-				this._drop();
+				_drop();
 				return fn.apply(null, args);
 			} else {
-				this._drop();
+				_drop();
 				args.unshift(name);
-				return this._defaultCalled.apply(null, args);
+				return _defaultCalled.apply(null, args);
 			}
 		}
 		
@@ -337,15 +354,15 @@ package org.typefest.proc {
 			p:int = 0,
 			uw:Boolean = false
 		):void {
-			this.__ed.addEventListener(t, l, uc, p, uw);
+			__ed.addEventListener(t, l, uc, p, uw);
 		}
 		
 		public function dispatchEvent(e:Event):Boolean {
-			return this.__ed.dispatchEvent(e);
+			return __ed.dispatchEvent(e);
 		}
 		
 		public function hasEventListener(t:String):Boolean {
-			return this.__ed.hasEventListener(t);
+			return __ed.hasEventListener(t);
 		}
 		
 		public function removeEventListener(
@@ -353,18 +370,21 @@ package org.typefest.proc {
 			l:Function,
 			uc:Boolean = false
 		):void {
-			this.__ed.removeEventListener(t, l, uc);
+			__ed.removeEventListener(t, l, uc);
 		}
 		
 		public function willTrigger(t:String):Boolean {
-			return this.__ed.willTrigger(t);
+			return __ed.willTrigger(t);
 		}
 		
 		//---------------------------------------
 		// toString
 		//---------------------------------------
 		public function toString():String {
-			return "[Proc " + this.id.toString() + "]";
+			return (
+				"[" + getQualifiedClassName(this)
+				+ " (Proc ID: " + id.toString() + ")]"
+			);
 		}
 	}
 }

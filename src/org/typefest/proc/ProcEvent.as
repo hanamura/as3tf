@@ -7,8 +7,8 @@ package org.typefest.proc {
 	import flash.events.Event;
 	
 	public class ProcEvent extends Event {
-		static public const START:String = "start";
-		static public const END:String   = "end";
+		static public const START:String  = "org.typefest.proc.ProcEvent::start";
+		static public const END:String    = "org.typefest.proc.ProcEvent::end";
 		
 		public function ProcEvent(
 			type:String,
@@ -20,9 +20,9 @@ package org.typefest.proc {
 		
 		override public function clone():Event {
 			return new ProcEvent(
-				this.type,
-				this.bubbles,
-				this.cancelable
+				type,
+				bubbles,
+				cancelable
 			);
 		}
 	}
