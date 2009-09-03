@@ -17,12 +17,13 @@ package org.typefest.time {
 	
 	// time expressions:
 	// 
-	// 5.6 -> 5.6 seconds
-	// 3   -> 3 seconds
-	// "3" -> 3 frames
+	// 5.6                   -> 5.6 seconds
+	// 3                     -> 3 seconds
+	// "3"                   -> 3 frames
 	// "2 minutes 3 seconds" -> 123 seconds
-	// "5 frames" -> 5 frames
-	// "3 days 5 hours 25 minutes 48 seconds 256 milliseconds" -> 278,748.256 seconds
+	// "5 frames"            -> 5 frames
+	// "3 days 5 hours 25 minutes 48 seconds 256 milliseconds"
+	//                       -> 278,748.256 seconds
 	
 	*/
 	public function readTime(time:*, fn1:Function = null, fn2:Function = null):* {

@@ -14,7 +14,7 @@ package org.typefest.adhoc.sharedobject {
 		
 		// usage:
 		
-		var so:SOLocal = new SOLocal("name", "/", {
+		var so:LSO = new LSO("name", "/", {
 			hello:"HELLO",
 			world:"WORLD",
 			foo:1
