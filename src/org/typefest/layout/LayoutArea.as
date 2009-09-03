@@ -84,43 +84,64 @@ package org.typefest.layout {
 		// Interfaces
 		//---------------------------------------
 		public function add(
-			a:*,
-			l:* = "noScale",
-			r:* = null,
-			px:* = null,
-			py:* = null,
+			a:*,             // target object
+			l:* = "noScale", // layout function
+			r:* = null,      // original rectangle / function to get rectangle
+			px:* = 0,        // positionX / if null, not apply x to target
+			py:* = 0,        // positionY / if null, not apply y to target
 			listen:Boolean = true
 		):void {
-			_[a] = {};
-			_[a].positionX = px !== null ? px : "positionX" in a ? a["positionX"] : null;
-			_[a].positionY = py !== null ? py : "positionY" in a ? a["positionY"] : null;
-			_[a].rect      = r  !== null ? r  : "rect"      in a ? a["rect"]      : null;
-			_[a].layout    = l  !== null ? l  : "layout"    in a ? a["layout"]    : Layout.noScale;
-			_[a].callableX = _[a].positionX is Function;
-			_[a].callableY = _[a].positionY is Function;
-			_[a].layout is String && (_[a].layout = Layout[_[a].layout]);
+			var $:Struct = new Struct();
 			
-			var rect:Rectangle = Layout.toRectangle(a); // rectangle clone of original a
+			if (l is Function) {
+				$.layout = l;
+			} else if (l is String) {
+				$.layout = Layout[l];
+			} else {
+				$.layout = Layout.noScale;
+			}
 			
-			if (_[a].rect === null) {
+			if (r === null) {
 				// if null, refer original a’s rectangle
-				_[a].getRect = function():Rectangle { return rect; }
-			} else if (_[a].rect is Function) {
+				$.rect    = Layout.toRectangle(a);
+				$.getRect = null;
+			} else if (r is Function) {
 				// if function, just call it
-				_[a].getRect = _[a].rect;
-			} else if (_[a].rect is Rectangle) {
+				$.rect    = null;
+				$.getRect = r;
+			} else if (r is Rectangle) {
 				// if rectangle, refer original rect
-				_[a].getRect = function():Rectangle { return _[a].rect; }
+				$.rect    = r;
+				$.getRect = null;
 			} else {
 				// if unknown object (including displayobject), refer it lazily
-				_[a].getRect = function():Rectangle {
-					return Layout.toRectangle(_[a].rect);
-				}
+				$.rect    = null;
+				$.getRect = function():Rectangle {
+					return Layout.toRectangle(r);
+				};
+			}
+			
+			if (px is Function) {
+				$.getPositionX = px;
+				$.positionX    = null;
+			} else {
+				$.getPositionX = null;
+				$.positionX    = px;
+			}
+			
+			if (py is Function) {
+				$.getPositionY = py;
+				$.positionY    = null;
+			} else {
+				$.getPositionY = null;
+				$.positionY    = py;
 			}
 			
 			if (a is IEventDispatcher && listen) {
 				a.addEventListener(Event.CHANGE, _childChange, false, 0, true);
 			}
+			
+			_[a] = $;
 			
 			_position(a);
 		}
@@ -161,21 +182,48 @@ package org.typefest.layout {
 		}
 		
 		protected function _position(a:*):void {
-			var rect:Rectangle = _[a].layout(
+			var $:Struct = _[a];
+			
+			var rect:Rectangle = $.layout(
 				_rect,
-				_[a].getRect(),
-				_[a].callableX ? 0 : _[a].positionX,
-				_[a].callableY ? 0 : _[a].positionY
+				$.getRect !== null ? $.getRect() : $.rect,
+				$.positionX === null ? 0 : $.positionX,
+				$.positionY === null ? 0 : $.positionY
 			);
-			
-			if (_[a].callableX) {
-				rect.x = x + _[a].positionX(width, rect.width);
+			if ($.getPositionX !== null) {
+				rect.x = x + $.getPositionX(width, rect.width);
+			} else {
+				if ($.positionX === null) {
+					rect.x = a.x;
+				}
 			}
-			if (_[a].callableY) {
-				rect.y = y + _[a].positionY(height, rect.height);
+			if ($.getPositionY !== null) {
+				rect.y = y + $.getPositionY(height, rect.height);
+			} else {
+				if ($.positionY === null) {
+					rect.y = a.y;
+				}
 			}
-			
 			Layout.apply(rect, a);
 		}
+	}
+}
+
+import flash.geom.Rectangle;
+
+internal class Struct extends Object {
+	public var layout:Function  = null;
+	
+	public var rect:Rectangle   = null;
+	public var getRect:Function = null;
+	
+	public var positionX:*           = null;
+	public var getPositionX:Function = null;
+	
+	public var positionY:*           = null;
+	public var getPositionY:Function = null;
+	
+	public function Struct() {
+		super();
 	}
 }

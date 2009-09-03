@@ -194,6 +194,64 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
+		// scale by x/y
+		//---------------------------------------
+		static public function scaleByX(
+			area:Rectangle,
+			target:Rectangle,
+			positionX:Number = 0.5,
+			positionY:Number = 0.5
+		):Rectangle {
+			var rect:Rectangle = target.clone();
+			
+			rect.width  = area.width;
+			rect.height = target.height * (area.width / target.width);
+			
+			return noScale(area, rect, positionX, positionY);
+		}
+		
+		static public function scaleByY(
+			area:Rectangle,
+			target:Rectangle,
+			positionX:Number = 0.5,
+			positionY:Number = 0.5
+		):Rectangle {
+			var rect:Rectangle = target.clone();
+			
+			rect.width  = target.width * (area.height / target.height);
+			rect.height = area.height;
+			
+			return noScale(area, rect, positionX, positionY);
+		}
+		
+		//---------------------------------------
+		// fit x/y
+		//---------------------------------------
+		static public function fitX(
+			area:Rectangle,
+			target:Rectangle,
+			positionX:Number = 0.5,
+			positionY:Number = 0.5
+		):Rectangle {
+			var rect:Rectangle = target.clone();
+			rect.width = area.width;
+			
+			return noScale(area, rect, positionX, positionY);
+		}
+		
+		static public function fitY(
+			area:Rectangle,
+			target:Rectangle,
+			positionX:Number = 0.5,
+			positionY:Number = 0.5
+		):Rectangle {
+			var rect:Rectangle = target.clone();
+			rect.height = area.height;
+			
+			return noScale(area, rect, positionX, positionY);
+		}
+		
+		//---------------------------------------
 		// Margin
 		//---------------------------------------
 		static public function margin(
@@ -214,6 +272,31 @@ package org.typefest.layout {
 				_area.right  = area.right  - right;
 				_area.top    = area.top    + top;
 				_area.bottom = area.bottom - bottom;
+				return layout(_area, target, positionX, positionY);
+			}
+		}
+		
+		//---------------------------------------
+		// Scale
+		//---------------------------------------
+		static public function scale(
+			layout:Function,
+			left:Number = 0,
+			right:Number = 0,
+			top:Number = 0,
+			bottom:Number = 0
+		):Function {
+			var _area:Rectangle = new Rectangle();
+			return function(
+				area:Rectangle,
+				target:Rectangle,
+				positionX:Number = 0.5,
+				positionY:Number = 0.5
+			):Rectangle {
+				_area.width  = area.width * (1 - (left + right));
+				_area.height = area.height * (1 - (top + bottom));
+				_area.x      = area.x + (area.width * left);
+				_area.y      = area.y + (area.height * top);
 				return layout(_area, target, positionX, positionY);
 			}
 		}
