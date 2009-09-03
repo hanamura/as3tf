@@ -169,6 +169,32 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
+		// Set Rect (Shortcut)
+		//---------------------------------------
+		public function setRect(rect:Rectangle):void {
+			var some:Boolean = false;
+			if (_rect.x !== rect.x) {
+				_rect.x = rect.x;
+				some = true;
+			}
+			if (_rect.y !== rect.y) {
+				_rect.y = rect.y;
+				some = true;
+			}
+			if (_rect.width !== rect.width) {
+				_rect.width = rect.width;
+				some = true;
+			}
+			if (_rect.height !== rect.height) {
+				_rect.height = rect.height;
+				some = true;
+			}
+			if (some) {
+				_update();
+			}
+		}
+		
+		//---------------------------------------
 		// Updates
 		//---------------------------------------
 		protected function _childChange(e:Event):void {
@@ -204,7 +230,11 @@ package org.typefest.layout {
 					rect.y = a.y;
 				}
 			}
-			Layout.apply(rect, a);
+			if (a is LayoutArea) {
+				(a as LayoutArea).setRect(rect);
+			} else {
+				Layout.apply(rect, a);
+			}
 		}
 	}
 }
