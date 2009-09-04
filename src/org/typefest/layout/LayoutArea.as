@@ -88,8 +88,7 @@ package org.typefest.layout {
 			l:* = "noScale", // layout function
 			r:* = null,      // original rectangle / function to get rectangle
 			px:* = 0,        // positionX / if null, not apply x to target
-			py:* = 0,        // positionY / if null, not apply y to target
-			listen:Boolean = true
+			py:* = 0         // positionY / if null, not apply y to target
 		):void {
 			var $:Struct = new Struct();
 			
@@ -137,10 +136,6 @@ package org.typefest.layout {
 				$.positionY    = py;
 			}
 			
-			if (a is IEventDispatcher && listen) {
-				a.addEventListener(Event.CHANGE, _childChange, false, 0, true);
-			}
-			
 			_[a] = $;
 			
 			_position(a);
@@ -149,17 +144,9 @@ package org.typefest.layout {
 			return a in _;
 		}
 		public function remove(a:*):void {
-			if (a in _ && a is IEventDispatcher) {
-				a.removeEventListener(Event.CHANGE, _childChange, false);
-			}
 			delete _[a];
 		}
 		public function clear():void {
-			for (var a:* in _) {
-				if (a is IEventDispatcher) {
-					a.removeEventListener(Event.CHANGE, _childChange, false);
-				}
-			}
 			_ = new Dictionary(true);
 		}
 		public function update(a:*):void {
@@ -197,10 +184,6 @@ package org.typefest.layout {
 		//---------------------------------------
 		// Updates
 		//---------------------------------------
-		protected function _childChange(e:Event):void {
-			_position(e.currentTarget);
-		}
-		
 		protected function _update():void {
 			for (var a:* in _) {
 				_position(a);
