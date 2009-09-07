@@ -73,8 +73,6 @@ package org.typefest.proc {
 		public function Proc() {
 			super();
 			
-			log("Proc");
-			
 			__ed = new EventDispatcher(this);
 			
 			__id    = ++__idCount;
