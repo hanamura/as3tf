@@ -12,6 +12,7 @@ package org.typefest.adhoc.image {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
+	import flash.system.LoaderContext;
 	
 	import org.typefest.adhoc.Container;
 	import org.typefest.adhoc.events.SilentErrorEvent;
@@ -46,10 +47,11 @@ package org.typefest.adhoc.image {
 		
 		*/
 		
-		protected var _sourceLoader:Loader = null;
-		protected var _base:DisplayObject  = null;
-		protected var _request:URLRequest  = null;
-		protected var _loader:Loader       = null;
+		protected var _sourceLoader:Loader     = null;
+		protected var _base:DisplayObject      = null;
+		protected var _request:URLRequest      = null;
+		protected var _loader:Loader           = null;
+		protected var _checkPolicyFile:Boolean = false;
 		
 		protected var _bitmap:Bitmap   = null;
 		protected var _loaderMask:Rect = null;
@@ -140,7 +142,8 @@ package org.typefest.adhoc.image {
 		public function RemoteImage(
 			request:URLRequest,
 			loader:Loader = null,
-			base:DisplayObject = null
+			base:DisplayObject = null,
+			checkPolicyFile:Boolean = false
 		) {
 			super();
 			
@@ -156,6 +159,8 @@ package org.typefest.adhoc.image {
 				_base = _;
 			}
 			
+			_checkPolicyFile = checkPolicyFile;
+			
 			addChild(_base);
 		}
 		
@@ -164,8 +169,10 @@ package org.typefest.adhoc.image {
 		//---------------------------------------
 		public function load():void {
 			if (!_loader) {
+				var context:LoaderContext = new LoaderContext(_checkPolicyFile);
+				
 				_loader = _sourceLoader ? _sourceLoader : new Loader();
-				_loader.load(_request);
+				_loader.load(_request, context);
 				_loader.contentLoaderInfo.addEventListener(
 					Event.COMPLETE, _loaderComplete
 				);
