@@ -69,25 +69,8 @@ package org.typefest.adhoc.shape {
 				_inner.height = _height - (_lineWidth * 2);
 			}
 			
-			var posX:uint      = ShapePosition.posX(_position);
-			var posY:uint      = ShapePosition.posY(_position);
-			var offsetX:Number = 0; // default: ShapePosition.LEFT
-			var offsetY:Number = 0; // default: ShapePosition.TOP
-			
-			if (posX === ShapePosition.RIGHT) {
-				offsetX = -_width;
-			} else if (posX === ShapePosition.CENTER) {
-				offsetX = -_width * 0.5;
-			}
-			
-			if (posY === ShapePosition.BOTTOM) {
-				offsetY = -_height;
-			} else if (posY === ShapePosition.MIDDLE) {
-				offsetY = -_height * 0.5;
-			}
-			
-			// var offsetX:Number = -_width * _positionX;
-			// var offsetY:Number = -_height * _positionY;
+			var offsetX:Number = -_width * _positionX;
+			var offsetY:Number = -_height * _positionY;
 			
 			_outer.offset(offsetX, offsetY);
 			_inner.offset(offsetX, offsetY);

@@ -213,42 +213,33 @@ package org.typefest.adhoc.shape {
 		//---------------------------------------
 		// Position
 		//---------------------------------------
-		protected var _position:uint = ShapePosition.TOP_LEFT;
-
-		public function get position():uint {
-			return _position;
+		protected var _positionX:Number = 0;
+		
+		public function get positionX():Number {
+			return _positionX;
 		}
-		public function set position(x:uint):void {
-			if(_position !== x) {
-				_position = x;
+		public function set positionX(x:Number):void {
+			if (_positionX !== x) {
+				_positionX = x;
 				_updatePosition();
 			}
 		}
 		
-		// protected var _positionX:Number = 0;
-		// 
-		// public function get positionX():Number {
-		// 	return _positionX;
-		// }
-		// public function set positionX(x:Number):void {
-		// 	if (_positionX !== x) {
-		// 		_positionX = x;
-		// 		_updatePosition();
-		// 	}
-		// }
-		// 
-		// protected var _positionY:Number = 0;
-		// 
-		// public function get positionY():Number {
-		// 	return _positionY;
-		// }
-		// public function set positionY(x:Number):void {
-		// 	if (_positionY !== x) {
-		// 		_positionY = x;
-		// 		_updatePosition();
-		// 	}
-		// }
+		protected var _positionY:Number = 0;
 		
+		public function get positionY():Number {
+			return _positionY;
+		}
+		public function set positionY(x:Number):void {
+			if (_positionY !== x) {
+				_positionY = x;
+				_updatePosition();
+			}
+		}
+		
+		//---------------------------------------
+		// Graphics
+		//---------------------------------------
 		protected var _graphics:Graphics = null;
 		
 		//---------------------------------------
