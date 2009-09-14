@@ -8,15 +8,16 @@ package org.typefest.adhoc.image {
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.PixelSnapping;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
 	import flash.system.LoaderContext;
 	
 	import org.typefest.adhoc.Container;
 	import org.typefest.adhoc.events.SilentErrorEvent;
 	import org.typefest.adhoc.shape.Rect;
+	import org.typefest.layout.Layout;
 	
 	public class RemoteImage extends Container {
 		/*
@@ -47,30 +48,31 @@ package org.typefest.adhoc.image {
 		
 		*/
 		
+		//---------------------------------------
+		// passed to constructor
+		//---------------------------------------
 		protected var _sourceLoader:Loader     = null;
 		protected var _base:DisplayObject      = null;
 		protected var _request:URLRequest      = null;
 		protected var _loader:Loader           = null;
 		protected var _checkPolicyFile:Boolean = false;
 		
-		protected var _bitmap:Bitmap   = null;
-		protected var _loaderMask:Rect = null;
-		
-		protected var _pixelSnapping:String = PixelSnapping.AUTO;
-		protected var _smoothing:Boolean    = true;
-		protected var _maskEnabled:Boolean  = false;
-		protected var _scaleMode:String     = StageScaleMode.EXACT_FIT;
-		
 		public function get base():DisplayObject {
 			return _base;
 		}
-		
 		public function get request():URLRequest {
 			return _request;
 		}
 		public function get loader():Loader {
 			return _loader;
 		}
+		
+		//---------------------------------------
+		// bitmap properties
+		//---------------------------------------
+		protected var _bitmap:Bitmap        = null;
+		protected var _pixelSnapping:String = PixelSnapping.AUTO;
+		protected var _smoothing:Boolean    = true;
 		
 		public function get pixelSnapping():String {
 			return _pixelSnapping;
@@ -92,6 +94,12 @@ package org.typefest.adhoc.image {
 			}
 		}
 		
+		//---------------------------------------
+		// masking
+		//---------------------------------------
+		protected var _loaderMask:Rect     = null;
+		protected var _maskEnabled:Boolean = false;
+		
 		public function get maskEnabled():Boolean {
 			return _maskEnabled;
 		}
@@ -102,16 +110,44 @@ package org.typefest.adhoc.image {
 			}
 		}
 		
-		public function get scaleMode():String {
-			return _scaleMode;
+		//---------------------------------------
+		// scale and position
+		//---------------------------------------
+		protected var _layout:Function  = Layout.exactFit;
+		protected var _positionX:Number = 0;
+		protected var _positionY:Number = 0;
+		
+		public function get layout():Function {
+			return _layout;
 		}
-		public function set scaleMode(x:String):void {
-			if(_scaleMode !== x) {
-				_scaleMode = x;
+		public function set layout(x:Function):void {
+			if (_layout !== x) {
+				_layout = x;
+				_update();
+			}
+		}
+		public function get positionX():Number {
+			return _positionX;
+		}
+		public function set positionX(x:Number):void {
+			if (_positionX !== x) {
+				_positionX = x;
+				_update();
+			}
+		}
+		public function get positionY():Number {
+			return _positionY;
+		}
+		public function set positionY(x:Number):void {
+			if (_positionY !== x) {
+				_positionY = x;
 				_update();
 			}
 		}
 		
+		//---------------------------------------
+		// raw size
+		//---------------------------------------
 		public function get rawWidth():Number {
 			if (_bitmap) {
 				return _bitmap.bitmapData.width;
@@ -119,7 +155,6 @@ package org.typefest.adhoc.image {
 				return NaN;
 			}
 		}
-		
 		public function get rawHeight():Number {
 			if (_bitmap) {
 				return _bitmap.bitmapData.height;
@@ -128,6 +163,9 @@ package org.typefest.adhoc.image {
 			}
 		}
 		
+		//---------------------------------------
+		// status
+		//---------------------------------------
 		public function get loading():Boolean {
 			return !!_loader && !_bitmap;
 		}
@@ -279,46 +317,21 @@ package org.typefest.adhoc.image {
 			}
 			
 			if (_bitmap) {
-				if (_width <= 0 || _height <= 0) {
+				var area:Rectangle   = new Rectangle(0, 0, _width, _height);
+				var target:Rectangle = new Rectangle(0, 0, rawWidth, rawHeight);
+				
+				var rect:Rectangle = _layout(area, target, _positionX, _positionY);
+				
+				if (rect.width <= 0 || rect.height <= 0) {
 					_loader.visible = false;
 					return;
 				}
-				
 				_loader.visible = true;
 				
-				var bdWidth:Number   = _bitmap.bitmapData.width;
-				var bdHeight:Number  = _bitmap.bitmapData.height;
-				var bdRatio:Number   = bdWidth / bdHeight;
-				var areaRatio:Number = _width / _height;
-				
-				if (_scaleMode === StageScaleMode.NO_SCALE) {
-					_loader.width  = bdWidth;
-					_loader.height = bdHeight;
-				} else if (_scaleMode === StageScaleMode.NO_BORDER) {
-					if (areaRatio > bdRatio) {
-						_loader.width  = _width;
-						_loader.height = bdHeight * (_width / bdWidth);
-					} else {
-						_loader.width  = bdWidth * (_height / bdHeight);
-						_loader.height = _height;
-					}
-				} else if (_scaleMode === StageScaleMode.SHOW_ALL) {
-					if (areaRatio > bdRatio) {
-						_loader.width  = bdWidth * (_height / bdHeight);
-						_loader.height = _height;
-					} else {
-						_loader.width  = _width;
-						_loader.height = bdHeight * (_width / bdWidth);
-					}
-				} else {
-					_loader.width  = _width;
-					_loader.height = _height;
-				}
-				
-				var loaderX:Number = (_width - _loader.width) / 2;
-				var loaderY:Number = (_height - _loader.height) / 2;
-				_loader.x = loaderX;
-				_loader.y = loaderY;
+				_loader.width  = rect.width;
+				_loader.height = rect.height;
+				_loader.x      = rect.x;
+				_loader.y      = rect.y;
 				
 				_loaderMask.width  = _width;
 				_loaderMask.height = _height;
