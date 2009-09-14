@@ -86,6 +86,9 @@ package org.typefest.adhoc.shape {
 				offsetY = -_height * 0.5;
 			}
 			
+			// var offsetX:Number = -_width * _positionX;
+			// var offsetY:Number = -_height * _positionY;
+			
 			_outer.offset(offsetX, offsetY);
 			_inner.offset(offsetX, offsetY);
 		}
