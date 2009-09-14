@@ -32,7 +32,7 @@ package org.typefest.adhoc.image {
 		var image:RemoteImage = new RemoteImage(new URLRequest(url));
 		image.width       = 100;
 		image.height      = 100;
-		image.scaleMode   = StageScaleMode.NO_SCALE;
+		image.layout      = Layout.noBorder;
 		image.maskEnabled = true;
 		image.base.fill   = 0x0000ff;
 		image.load();
@@ -114,8 +114,8 @@ package org.typefest.adhoc.image {
 		// scale and position
 		//---------------------------------------
 		protected var _layout:Function  = Layout.exactFit;
-		protected var _positionX:Number = 0;
-		protected var _positionY:Number = 0;
+		protected var _positionX:Number = 0.5;
+		protected var _positionY:Number = 0.5;
 		
 		public function get layout():Function {
 			return _layout;
