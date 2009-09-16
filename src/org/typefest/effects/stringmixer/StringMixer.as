@@ -87,48 +87,48 @@ package org.typefest.effects.stringmixer {
 		protected var _getLocalRatio:Function = null;
 		
 		public function get source():String {
-			return this._source;
+			return _source;
 		}
 		public function set source(str:String):void {
-			if(this._source !== str) {
-				this._source = str;
-				this._update();
+			if(_source !== str) {
+				_source = str;
+				_update();
 			}
 		}
 		
 		public function get ratio():Number {
-			return this._ratio;
+			return _ratio;
 		}
 		public function set ratio(num:Number):void {
 			num = Num.pinch(0, num, 1);
 			
-			if(this._ratio !== num) {
-				this._ratio = num;
-				this._update();
+			if(_ratio !== num) {
+				_ratio = num;
+				_update();
 			}
 		}
 		
 		public function get text():String {
-			return this._text;
+			return _text;
 		}
 		
 		public function get getChar():Function {
-			return this._getChar;
+			return _getChar;
 		}
 		public function set getChar(fn:Function):void {
-			if(this._getChar !== fn) {
-				this._getChar = fn;
-				this._update();
+			if(_getChar !== fn) {
+				_getChar = fn;
+				_update();
 			}
 		}
 		
 		public function get getLocalRatio():Function {
-			return this._getLocalRatio;
+			return _getLocalRatio;
 		}
 		public function set getLocalRatio(fn:Function):void {
-			if(this._getLocalRatio !== fn) {
-				this._getLocalRatio = fn;
-				this._update();
+			if(_getLocalRatio !== fn) {
+				_getLocalRatio = fn;
+				_update();
 			}
 		}
 		
@@ -139,21 +139,21 @@ package org.typefest.effects.stringmixer {
 		) {
 			super();
 			
-			this._source = source;
+			_source = source;
 			
 			if(getChar === null) {
-				this._getChar = _defaultGetChar;
+				_getChar = _defaultGetChar;
 			} else {
-				this._getChar = getChar;
+				_getChar = getChar;
 			}
 			
 			if(getLocalRatio === null) {
-				this._getLocalRatio = _defaultGetLocalRatio;
+				_getLocalRatio = _defaultGetLocalRatio;
 			} else {
-				this._getLocalRatio = getLocalRatio;
+				_getLocalRatio = getLocalRatio;
 			}
 			
-			this._update();
+			_update();
 		}
 		
 		protected function _update():void {
@@ -161,17 +161,14 @@ package org.typefest.effects.stringmixer {
 			var c:String;
 			var r:Number;
 			
-			for(var i:int = 0; i < this._source.length; i++) {
-				c = this._source.charAt(i);
-				r = this._getLocalRatio(
-					i / (this._source.length - 1),
-					this._ratio
-				);
+			for(var i:int = 0; i < _source.length; i++) {
+				c = _source.charAt(i);
+				r = _getLocalRatio(i / (_source.length - 1), _ratio);
 				
-				chars.push(this._getChar(c, r));
+				chars.push(_getChar(c, r));
 			}
 			
-			this._text = chars.join("");
+			_text = chars.join("");
 		}
 	}
 }

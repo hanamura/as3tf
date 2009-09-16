@@ -84,11 +84,12 @@ package org.typefest.layout {
 		// Interfaces
 		//---------------------------------------
 		public function add(
-			a:*,             // target object
-			l:* = "noScale", // layout function
-			r:* = null,      // original rectangle / function to get rectangle
-			px:* = 0,        // positionX / if null, not apply x to target
-			py:* = 0         // positionY / if null, not apply y to target
+			a:*,                    // target object
+			l:* = "noScale",        // layout function
+			r:* = null,             // original rectangle / function to get rectangle
+			px:* = 0,               // positionX / if null, not apply x to target
+			py:* = 0,               // positionY / if null, not apply y to target
+			applier:Function = null // function to apply rect to target
 		):void {
 			var $:Struct = new Struct();
 			
@@ -134,6 +135,12 @@ package org.typefest.layout {
 			} else {
 				$.getPositionY = null;
 				$.positionY    = py;
+			}
+			
+			if (applier === null) {
+				$.applier = Layout.apply;
+			} else {
+				$.applier = applier;
 			}
 			
 			_[a] = $;
@@ -216,7 +223,7 @@ package org.typefest.layout {
 			if (a is LayoutArea) {
 				(a as LayoutArea).setRect(rect);
 			} else {
-				Layout.apply(rect, a);
+				$.applier(rect, a);
 			}
 		}
 	}
@@ -235,6 +242,8 @@ internal class Struct extends Object {
 	
 	public var positionY:*           = null;
 	public var getPositionY:Function = null;
+	
+	public var applier:Function = null;
 	
 	public function Struct() {
 		super();

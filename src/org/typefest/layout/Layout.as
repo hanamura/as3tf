@@ -310,5 +310,11 @@ package org.typefest.layout {
 			target.width  = rect.width;
 			target.height = rect.height;
 		}
+		static public function applyFloored(rect:Rectangle, target:*):void {
+			target.x      = Math.floor(rect.x);
+			target.y      = Math.floor(rect.y);
+			target.width  = Math.floor(rect.width);
+			target.height = Math.floor(rect.height);
+		}
 	}
 }

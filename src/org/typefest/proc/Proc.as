@@ -155,7 +155,7 @@ package org.typefest.proc {
 		// Registrations
 		//---------------------------------------
 		public function listen(
-			dispatcher:IEventDispatcher,
+			dispatcher:*,
 			types:*,
 			listener:Function,
 			priority:int = 0
