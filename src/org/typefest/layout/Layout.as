@@ -316,5 +316,21 @@ package org.typefest.layout {
 			target.width  = Math.floor(rect.width);
 			target.height = Math.floor(rect.height);
 		}
+		static public function applyPosition(rect:Rectangle, target:*):void {
+			target.x = rect.x;
+			target.y = rect.y;
+		}
+		static public function applySize(rect:Rectangle, target:*):void {
+			target.width  = rect.width;
+			target.height = rect.height;
+		}
+		static public function applyPositionFloored(rect:Rectangle, target:*):void {
+			target.x = Math.floor(rect.x);
+			target.y = Math.floor(rect.y);
+		}
+		static public function applySizeFloored(rect:Rectangle, target:*):void {
+			target.width  = Math.floor(rect.width);
+			target.height = Math.floor(rect.height);
+		}
 	}
 }
