@@ -57,6 +57,10 @@ package org.typefest.layout {
 				function():void {
 					rect.width  = area.width;
 					rect.height = target.height * (area.width / target.width);
+				},
+				function():void {
+					rect.width  = area.width;
+					rect.height = area.height;
 				}
 			);
 			
@@ -94,6 +98,10 @@ package org.typefest.layout {
 				},
 				function():void {
 					rect.width  = target.width * (area.height / target.height);
+					rect.height = area.height;
+				},
+				function():void {
+					rect.width  = area.width;
 					rect.height = area.height;
 				}
 			);
