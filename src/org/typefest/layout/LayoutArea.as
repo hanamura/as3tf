@@ -5,7 +5,6 @@ See LICENSE.txt for full license information.
 
 package org.typefest.layout {
 	import flash.events.Event;
-	import flash.events.IEventDispatcher;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
@@ -152,6 +151,7 @@ package org.typefest.layout {
 			for (var a:* in _) {
 				_position(a);
 			}
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		protected function _position(a:*):void {

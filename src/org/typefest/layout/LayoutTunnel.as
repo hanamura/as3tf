@@ -5,6 +5,7 @@ See LICENSE.txt for full license information.
 
 package org.typefest.layout {
 	import flash.errors.IllegalOperationError;
+	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
@@ -27,23 +28,21 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
-		// area
-		//---------------------------------------
-		protected var _area:LayoutArea = null;
-		
-		//---------------------------------------
 		// from
 		//---------------------------------------
-		protected var _from:LayoutTunnelEdge = null;
+		protected var _from:LayoutArea = null;
 		
-		public function get from():LayoutTunnelEdge {
+		public function get from():LayoutArea {
 			return _from;
 		}
-		public function set from(x:LayoutTunnelEdge):void {
+		public function set from(x:LayoutArea):void {
+			if (!x) {
+				throw new ArgumentError("from cannot be null.");
+			}
 			if (_from !== x) {
-				_from.tunnel = null;
+				_from.removeEventListener(Event.CHANGE, _edgeChange, false);
 				_from = x;
-				_from.tunnel = this;
+				_from.addEventListener(Event.CHANGE, _edgeChange, false, 0, true);
 				_update();
 			}
 		}
@@ -51,16 +50,19 @@ package org.typefest.layout {
 		//---------------------------------------
 		// to
 		//---------------------------------------
-		protected var _to:LayoutTunnelEdge = null;
+		protected var _to:LayoutArea = null;
 		
-		public function get to():LayoutTunnelEdge {
+		public function get to():LayoutArea {
 			return _to;
 		}
-		public function set to(x:LayoutTunnelEdge):void {
+		public function set to(x:LayoutArea):void {
+			if (!x) {
+				throw new ArgumentError("to cannot be null.");
+			}
 			if (_to !== x) {
-				_to.tunnel = null;
+				_to.removeEventListener(Event.CHANGE, _edgeChange, false);
 				_to = x;
-				_to.tunnel = this;
+				_to.addEventListener(Event.CHANGE, _edgeChange, false, 0, true);
 				_update();
 			}
 		}
@@ -88,26 +90,22 @@ package org.typefest.layout {
 		// Constructor
 		//---------------------------------------
 		public function LayoutTunnel(
-			from:LayoutTunnelEdge = null,
-			to:LayoutTunnelEdge = null
+			from:LayoutArea = null,
+			to:LayoutArea = null
 		) {
-			_area = new LayoutArea();
+			_from = from || new LayoutArea();
+			_to   = to   || new LayoutArea();
 			
-			_from = from || new LayoutTunnelEdge();
-			_to   = to   || new LayoutTunnelEdge();
-			
-			_from.tunnel = this;
-			_to.tunnel   = this;
+			_from.addEventListener(Event.CHANGE, _edgeChange, false, 0, true);
+			_to.addEventListener(Event.CHANGE, _edgeChange, false, 0, true);
 			
 			super();
-			
-			//_update();
 		}
 		
 		//---------------------------------------
 		// update
 		//---------------------------------------
-		internal function updateTunnel():void {
+		protected function _edgeChange(e:Event):void {
 			_update();
 		}
 		

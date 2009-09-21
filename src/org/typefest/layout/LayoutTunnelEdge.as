@@ -22,6 +22,8 @@ package org.typefest.layout {
 		
 		override protected function _update():void {
 			super._update();
+			
+			
 			if (_tunnel) {
 				_tunnel.updateTunnel();
 			}

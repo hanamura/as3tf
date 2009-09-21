@@ -4,9 +4,10 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.layout {
+	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
 	
-	public class LayoutRect extends Object {
+	public class LayoutRect extends EventDispatcher {
 		protected var _rect:Rectangle = null;
 		
 		public function get rect():Rectangle {
