@@ -9,51 +9,8 @@ package org.typefest.layout {
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
-	public class LayoutArea extends Object {
+	public class LayoutArea extends LayoutRect {
 		protected var _:Dictionary = null;
-		
-		protected var _rect:Rectangle = null;
-		
-		public function get rect():Rectangle {
-			return _rect.clone();
-		}
-		
-		public function get x():Number {
-			return _rect.x;
-		}
-		public function set x(x:Number):void {
-			if (_rect.x !== x) {
-				_rect.x = x;
-				_update();
-			}
-		}
-		public function get y():Number {
-			return _rect.y;
-		}
-		public function set y(x:Number):void {
-			if (_rect.y !== x) {
-				_rect.y = x;
-				_update();
-			}
-		}
-		public function get width():Number {
-			return _rect.width;
-		}
-		public function set width(x:Number):void {
-			if (_rect.width !== x) {
-				_rect.width = x;
-				_update();
-			}
-		}
-		public function get height():Number {
-			return _rect.height;
-		}
-		public function set height(x:Number):void {
-			if (_rect.height !== x) {
-				_rect.height = x;
-				_update();
-			}
-		}
 		
 		public function get targets():Array {
 			var r:Array = [];
@@ -191,7 +148,7 @@ package org.typefest.layout {
 		//---------------------------------------
 		// Updates
 		//---------------------------------------
-		protected function _update():void {
+		override protected function _update():void {
 			for (var a:* in _) {
 				_position(a);
 			}
