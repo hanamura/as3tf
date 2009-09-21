@@ -183,6 +183,13 @@ package org.typefest.layout {
 				$.applier(rect, a);
 			}
 		}
+		
+		//---------------------------------------
+		// to string
+		//---------------------------------------
+		override public function toString():String {
+			return _rect.toString();
+		}
 	}
 }
 
