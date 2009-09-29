@@ -256,6 +256,14 @@ package org.typefest.proc {
 		// Triggereds
 		//---------------------------------------
 		protected function _listenTriggered(e:Event):void {
+			if (!__listenerFuncs) {
+				// Even if this function _listenTriggered
+				// removed from event dispatcher, sometimes called
+				// unless an event object is stopped immediate propagation.
+				// I’m not sure about this behaviour.
+				// This workaround is just temporary.
+				return;
+			}
 			var fn:Function = __listenerFuncs[e.currentTarget][e.type];
 			_drop();
 			fn(e);
