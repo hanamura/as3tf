@@ -230,7 +230,9 @@ package org.typefest.adhoc.image {
 					_loader = null;
 				} else {
 					_delisten();
-					_loader.close();
+					try {
+						_loader.close();
+					} catch (e:Error) {}
 					_loader.unload();
 					_loader = null;
 				}
