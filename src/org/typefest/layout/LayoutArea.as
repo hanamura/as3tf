@@ -119,34 +119,6 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
-		// Set Rect (Shortcut)
-		//---------------------------------------
-		public function set(x:Number, y:Number, width:Number, height:Number):void {
-			var some:Boolean = false;
-			
-			if (_rect.x !== x) {
-				_rect.x = x;
-				some = true;
-			}
-			if (_rect.y !== y) {
-				_rect.y = y;
-				some = true;
-			}
-			if (_rect.width !== width) {
-				_rect.width = width;
-				some = true;
-			}
-			if (_rect.height !== height) {
-				_rect.height = height;
-				some = true;
-			}
-			
-			if (some) {
-				_update();
-			}
-		}
-		
-		//---------------------------------------
 		// Updates
 		//---------------------------------------
 		override protected function _update():void {

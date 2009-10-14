@@ -68,6 +68,31 @@ package org.typefest.layout {
 			_rect = new Rectangle(x, y, width, height);
 		}
 		
+		public function set(x:Number, y:Number, width:Number, height:Number):void {
+			var some:Boolean = false;
+			
+			if (_rect.x !== x) {
+				_rect.x = x;
+				some = true;
+			}
+			if (_rect.y !== y) {
+				_rect.y = y;
+				some = true;
+			}
+			if (_rect.width !== width) {
+				_rect.width = width;
+				some = true;
+			}
+			if (_rect.height !== height) {
+				_rect.height = height;
+				some = true;
+			}
+			
+			if (some) {
+				_update();
+			}
+		}
+		
 		protected function _update():void {}
 	}
 }
