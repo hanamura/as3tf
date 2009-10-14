@@ -28,10 +28,10 @@ package org.typefest.layout {
 			width:Number = 0,
 			height:Number = 0
 		) {
-			super();
+			super(x, y, width, height);
 			
-			_     = new Dictionary(true);
-			_rect = new Rectangle(x, y, width, height);
+			_ = new Dictionary(true);
+			// _rect = new Rectangle(x, y, width, height);
 			
 			_update();
 		}
@@ -121,24 +121,26 @@ package org.typefest.layout {
 		//---------------------------------------
 		// Set Rect (Shortcut)
 		//---------------------------------------
-		public function setRect(rect:Rectangle):void {
+		public function set(x:Number, y:Number, width:Number, height:Number):void {
 			var some:Boolean = false;
-			if (_rect.x !== rect.x) {
-				_rect.x = rect.x;
+			
+			if (_rect.x !== x) {
+				_rect.x = x;
 				some = true;
 			}
-			if (_rect.y !== rect.y) {
-				_rect.y = rect.y;
+			if (_rect.y !== y) {
+				_rect.y = y;
 				some = true;
 			}
-			if (_rect.width !== rect.width) {
-				_rect.width = rect.width;
+			if (_rect.width !== width) {
+				_rect.width = width;
 				some = true;
 			}
-			if (_rect.height !== rect.height) {
-				_rect.height = rect.height;
+			if (_rect.height !== height) {
+				_rect.height = height;
 				some = true;
 			}
+			
 			if (some) {
 				_update();
 			}
@@ -178,7 +180,7 @@ package org.typefest.layout {
 				}
 			}
 			if (a is LayoutArea) {
-				(a as LayoutArea).setRect(rect);
+				(a as LayoutArea).set(rect.x, rect.y, rect.width, rect.height);
 			} else {
 				$.applier(rect, a);
 			}
