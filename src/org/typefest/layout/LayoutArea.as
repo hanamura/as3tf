@@ -31,7 +31,6 @@ package org.typefest.layout {
 			super(x, y, width, height);
 			
 			_ = new Dictionary(true);
-			// _rect = new Rectangle(x, y, width, height);
 			
 			_update();
 		}
