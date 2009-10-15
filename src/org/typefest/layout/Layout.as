@@ -14,31 +14,6 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
-		// compareRatio
-		//---------------------------------------
-		static public function compareRatio(
-			area:Rectangle,
-			target:Rectangle,
-			wideArea:Function = null,
-			tallArea:Function = null,
-			sameRatio:Function = null
-		):int {
-			var areaRatio:Number   = area.width / area.height;
-			var targetRatio:Number = target.width / target.height;
-			
-			if (areaRatio > targetRatio) {
-				(wideArea !== null) && wideArea();
-				return -1;
-			} else if (areaRatio < targetRatio) {
-				(tallArea !== null) && tallArea();
-				return 1;
-			} else {
-				(sameRatio !== null) && sameRatio();
-				return 0;
-			}
-		}
-		
-		//---------------------------------------
 		// showAll
 		//---------------------------------------
 		static public function showAll(
@@ -49,20 +24,19 @@ package org.typefest.layout {
 		):Rectangle {
 			var rect:Rectangle = target.clone();
 			
-			compareRatio(area, target,
-				function():void {
-					rect.width  = target.width * (area.height / target.height);
-					rect.height = area.height;
-				},
-				function():void {
-					rect.width  = area.width;
-					rect.height = target.height * (area.width / target.width);
-				},
-				function():void {
-					rect.width  = area.width;
-					rect.height = area.height;
-				}
-			);
+			var areaRatio:Number   = area.width / area.height;
+			var targetRatio:Number = target.width / target.height;
+			
+			if (areaRatio > targetRatio) {
+				rect.width  = target.width * (area.height / target.height);
+				rect.height = area.height;
+			} else if (areaRatio < targetRatio) {
+				rect.width  = area.width;
+				rect.height = target.height * (area.width / target.width);
+			} else {
+				rect.width  = area.width;
+				rect.height = area.height;
+			}
 			
 			return noScale(area, rect, positionX, positionY);
 		}
@@ -91,20 +65,19 @@ package org.typefest.layout {
 		):Rectangle {
 			var rect:Rectangle = target.clone();
 			
-			compareRatio(area, target,
-				function():void {
-					rect.width  = area.width;
-					rect.height = target.height * (area.width / target.width);
-				},
-				function():void {
-					rect.width  = target.width * (area.height / target.height);
-					rect.height = area.height;
-				},
-				function():void {
-					rect.width  = area.width;
-					rect.height = area.height;
-				}
-			);
+			var areaRatio:Number   = area.width / area.height;
+			var targetRatio:Number = target.width / target.height;
+			
+			if (areaRatio > targetRatio) {
+				rect.width  = area.width;
+				rect.height = target.height * (area.width / target.width);
+			} else if (areaRatio < targetRatio) {
+				rect.width  = target.width * (area.height / target.height);
+				rect.height = area.height;
+			} else {
+				rect.width  = area.width;
+				rect.height = area.height;
+			}
 			
 			return noScale(area, rect, positionX, positionY);
 		}
