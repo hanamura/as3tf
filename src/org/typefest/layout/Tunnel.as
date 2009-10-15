@@ -85,6 +85,10 @@ package org.typefest.layout {
 		override public function set(x:Number, y:Number, w:Number, h:Number):void {
 			throw new IllegalOperationError("set() is not callable.");
 		}
+		// area
+		override public function set parent(x:Area):void {
+			throw new IllegalOperationError("Tunnel cannot be a child.");
+		}
 		
 		//---------------------------------------
 		// Constructor
