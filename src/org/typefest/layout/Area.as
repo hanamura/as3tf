@@ -8,7 +8,7 @@ package org.typefest.layout {
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
-	public class Area extends LayoutRect implements IPositionable {
+	public class Area extends BaseRect implements IPositionable {
 		//---------------------------------------
 		// static methods suitable for area object
 		//---------------------------------------
@@ -371,9 +371,9 @@ import flash.geom.Rectangle;
 
 import org.typefest.layout.Area;
 import org.typefest.layout.IPositionable;
-import org.typefest.layout.LayoutRect;
+import org.typefest.layout.BaseRect;
 
-internal class Struct extends LayoutRect implements IPositionable {
+internal class Struct extends BaseRect implements IPositionable {
 	protected var _layout:Function = null;
 	public function get layout():Function { return _layout; }
 	public function set layout(x:Function):void { _layout = x; }
