@@ -292,6 +292,9 @@ package org.typefest.layout {
 		// clear
 		//---------------------------------------
 		public function clear():void {
+			for (var p:* in __positionables) {
+				p.parent = null;
+			}
 			__positionables = new Dictionary(true);
 			__targets       = new Dictionary(true);
 		}
