@@ -204,18 +204,18 @@ package org.typefest.layout {
 		// add
 		//---------------------------------------
 		public function add(
-			t:*,
-			l:*            = "exactFit", // Function or String
-			r:Rectangle    = null,
-			px:*           = 0, // Number or Function
-			py:*           = 0, // Number or Function
-			apply:Function = null
+			target:*,
+			layout:*           = "exactFit", // Function or String
+			original:Rectangle = null,
+			positionX:*        = 0, // Number or Function
+			positionY:*        = 0, // Number or Function
+			apply:Function     = null
 		):void {
-			if (t === this) {
+			if (target === this) {
 				throw ArgumentError("Unable to add to itself.");
 			}
-			if (t is IPositionable) {
-				var p:IPositionable = t as IPositionable;
+			if (target is IPositionable) {
+				var p:IPositionable = target as IPositionable;
 				
 				if (p.parent) {
 					p.parent.remove(p);
@@ -226,53 +226,18 @@ package org.typefest.layout {
 				
 				_position(p, p);
 			} else {
-				var $:Struct = new Struct();
+				var $:Struct = new Struct(
+					target,
+					layout,
+					original,
+					positionX,
+					positionY,
+					apply
+				);
 				
-				if (l is Function) {
-					$.layout = l;
-				} else if (l is String) {
-					$.layout = Layout[l];
-				} else {
-					$.layout = Layout.exactFit;
-				}
+				__targets[target] = $;
 				
-				if (r) {
-					$.original = r.clone();
-				} else {
-					$.original = Layout.toRectangle(t);
-				}
-				
-				if (px is Number) {
-					$.positionX    = px;
-					$.getPositionX = null;
-				} else if (px is Function) {
-					$.positionX    = NaN;
-					$.getPositionX = px;
-				} else {
-					$.positionX    = Number(px);
-					$.getPositionX = null;
-				}
-				
-				if (py is Number) {
-					$.positionY    = py;
-					$.getPositionY = null;
-				} else if (py is Function) {
-					$.positionY    = NaN;
-					$.getPositionY = py;
-				} else {
-					$.positionY    = Number(py);
-					$.getPositionY = null;
-				}
-				
-				if (apply === null) {
-					$.apply = Layout.apply;
-				} else {
-					$.apply = apply;
-				}
-				
-				__targets[t] = $;
-				
-				_position($, t);
+				_position($, target);
 			}
 		}
 		
@@ -367,48 +332,5 @@ package org.typefest.layout {
 		override public function toString():String {
 			return _rect.toString();
 		}
-	}
-}
-
-import flash.geom.Rectangle;
-
-import org.typefest.layout.Area;
-import org.typefest.layout.IPositionable;
-import org.typefest.layout.BaseRect;
-
-internal class Struct extends BaseRect implements IPositionable {
-	protected var _layout:Function = null;
-	public function get layout():Function { return _layout; }
-	public function set layout(x:Function):void { _layout = x; }
-	
-	protected var _original:Rectangle = null;
-	public function get original():Rectangle { return _original; }
-	public function set original(x:Rectangle):void { _original = x; }
-	
-	protected var _positionX:Number = 0;
-	public function get positionX():Number { return _positionX; }
-	public function set positionX(x:Number):void { _positionX = x; }
-	
-	protected var _positionY:Number = 0;
-	public function get positionY():Number { return _positionY; }
-	public function set positionY(x:Number):void { _positionY = x; }
-	
-	protected var _getPositionX:Function = null;
-	public function get getPositionX():Function { return _getPositionX; }
-	public function set getPositionX(x:Function):void { _getPositionX = x; }
-	
-	protected var _getPositionY:Function = null;
-	public function get getPositionY():Function { return _getPositionY; }
-	public function set getPositionY(x:Function):void { _getPositionY = x; }
-	
-	protected var _apply:Function = null;
-	public function get apply():Function { return _apply; }
-	public function set apply(x:Function):void { _apply = x; }
-	
-	public function get parent():Area { return null; }
-	public function set parent(x:Area):void {}
-	
-	public function Struct() {
-		super();
 	}
 }
