@@ -4,25 +4,34 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.layout {
-	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
-	import flash.geom.Point;
+	import flash.errors.IllegalOperationError;
 	import flash.geom.Rectangle;
 	
-	import org.typefest.geom.draft.XY;
+	import org.typefest.core.Num;
 	
-	public class Tunnel extends Area {
+	public class XYTunnel extends Area {
 		//---------------------------------------
-		// ratio
+		// ratio x / y
 		//---------------------------------------
-		protected var _ratio:Number = 0;
-
-		public function get ratio():Number {
-			return _ratio;
+		protected var _ratioX:Number = 0;
+		protected var _ratioY:Number = 0;
+		
+		public function get ratioX():Number {
+			return _ratioX;
 		}
-		public function set ratio(x:Number):void {
-			if (_ratio !== x) {
-				_ratio = x;
+		public function set ratioX(x:Number):void {
+			if (_ratioX !== x) {
+				_ratioX = x;
+				_updateArea();
+			}
+		}
+		public function get ratioY():Number {
+			return _ratioY;
+		}
+		public function set ratioY(y:Number):void {
+			if (_ratioY !== y) {
+				_ratioY = y;
 				_updateArea();
 			}
 		}
@@ -93,7 +102,7 @@ package org.typefest.layout {
 		//---------------------------------------
 		// Constructor
 		//---------------------------------------
-		public function Tunnel(from:Area, to:Area) {
+		public function XYTunnel(from:Area = null, to:Area = null) {
 			super();
 			
 			_from = from || new Area();
@@ -112,22 +121,10 @@ package org.typefest.layout {
 		protected function _updateArea():void {
 			var rect:Rectangle = new Rectangle();
 			
-			var topLeft:Point = XY.between(
-				new Point(_from.x, _from.y),
-				new Point(_to.x, _to.y),
-				_ratio
-			);
-			
-			var bottomRight:Point = XY.between(
-				new Point(_from.x + _from.width, _from.y + _from.height),
-				new Point(_to.x + _to.width, _to.y + _to.height),
-				_ratio
-			);
-			
-			rect.left   = topLeft.x;
-			rect.top    = topLeft.y;
-			rect.right  = bottomRight.x;
-			rect.bottom = bottomRight.y;
+			rect.x      = Num.between(_from.x,      _to.x,      _ratioX);
+			rect.width  = Num.between(_from.width,  _to.width,  _ratioX);
+			rect.y      = Num.between(_from.y,      _to.y,      _ratioY);
+			rect.height = Num.between(_from.height, _to.height, _ratioY);
 			
 			// set rectangle
 			var some:Boolean = false;
