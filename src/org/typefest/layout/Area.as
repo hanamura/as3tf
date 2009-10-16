@@ -212,7 +212,7 @@ package org.typefest.layout {
 			apply:Function     = null
 		):void {
 			if (target === this) {
-				throw ArgumentError("Unable to add to itself.");
+				throw new ArgumentError("Unable to add to itself.");
 			}
 			if (target is IPositionable) {
 				var p:IPositionable = target as IPositionable;
@@ -224,7 +224,7 @@ package org.typefest.layout {
 				
 				__positionables[p] = true;
 				
-				_position(p, p);
+				_position(p, p, _rect);
 			} else {
 				var $:Struct = new Struct(
 					target,
@@ -237,7 +237,7 @@ package org.typefest.layout {
 				
 				__targets[target] = $;
 				
-				_position($, target);
+				_position($, target, _rect);
 			}
 		}
 		
@@ -269,9 +269,9 @@ package org.typefest.layout {
 		//---------------------------------------
 		public function update(t:*):void {
 			if (t in __positionables) {
-				_position(t, t);
+				_position(t, t, _rect);
 			} else if (t in __targets) {
-				_position(__targets[t], t);
+				_position(__targets[t], t, _rect);
 			}
 		}
 		
@@ -289,10 +289,10 @@ package org.typefest.layout {
 		//---------------------------------------
 		override protected function _update():void {
 			for (var p:* in __positionables) {
-				_position(p, p);
+				_position(p, p, _rect);
 			}
 			for (var t:* in __targets) {
-				_position(__targets[t], t);
+				_position(__targets[t], t, _rect);
 			}
 			dispatchEvent(new Event(Event.CHANGE));
 		}
@@ -300,12 +300,12 @@ package org.typefest.layout {
 		//---------------------------------------
 		// position
 		//---------------------------------------
-		protected function _position(p:IPositionable, t:*):void {
+		protected function _position(p:IPositionable, t:*, a:Rectangle):void {
 			var xnan:Boolean = isNaN(p.positionX);
 			var ynan:Boolean = isNaN(p.positionY);
 			
 			var rect:Rectangle = p.layout(
-				_rect,
+				a,
 				p.original || Layout.toRectangle(t),
 				xnan ? 0 : p.positionX,
 				ynan ? 0 : p.positionY
