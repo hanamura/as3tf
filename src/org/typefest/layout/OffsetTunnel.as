@@ -73,8 +73,8 @@ package org.typefest.layout {
 			rect.x = _from.x + _offsetX;
 			rect.y = _from.y + _offsetY;
 			
-			_ratioX = _offsetX / _rangeX;
-			_ratioY = _offsetY / _rangeY;
+			_ratioX = (_rangeX === 0) ? 0 : (_offsetX / _rangeX);
+			_ratioY = (_rangeY === 0) ? 0 : (_offsetY / _rangeY);
 			
 			rect.width  = Num.between(_from.width, _to.width, _ratioX);
 			rect.height = Num.between(_from.height, _to.height, _ratioY);
