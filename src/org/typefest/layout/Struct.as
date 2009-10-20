@@ -6,7 +6,7 @@ See LICENSE.txt for full license information.
 package org.typefest.layout {
 	import flash.geom.Rectangle;
 	
-	internal class Struct extends BaseRect implements IPositionable {
+	public class Struct extends BaseRect implements IPositionable {
 		protected var _layout:Function = null;
 		public function get layout():Function { return _layout; }
 		public function set layout(x:Function):void { _layout = x; }
