@@ -32,6 +32,10 @@ package org.typefest.transitions.follow {
 		protected var _curr:ValueProxy = null;
 		protected var _options:*       = null;
 		
+		public function get targets():Array {
+			return _curr.targets;
+		}
+		
 		protected var _moving:Boolean = false;
 		
 		public function get moving():Boolean {
