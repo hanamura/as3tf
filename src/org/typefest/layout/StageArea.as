@@ -11,7 +11,7 @@ package org.typefest.layout {
 	public class StageArea extends Area {
 		protected var _stage:Stage = null;
 		
-		override public function set parent(x:Area):void {
+		override public function set parentArea(x:Area):void {
 			throw new IllegalOperationError("StageArea cannot be a child.");
 		}
 		

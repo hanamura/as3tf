@@ -33,7 +33,7 @@ package org.typefest.layout {
 		//---------------------------------------
 		// parent area
 		//---------------------------------------
-		function get parent():Area;
-		function set parent(area:Area):void;
+		function get parentArea():Area;
+		function set parentArea(area:Area):void;
 	}
 }

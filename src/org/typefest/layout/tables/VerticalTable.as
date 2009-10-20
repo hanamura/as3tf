@@ -249,7 +249,7 @@ package org.typefest.layout.tables {
 			
 			if (inPos || inTar) {
 				if (inPos) {
-					target.parent = null;
+					target.parentArea = null;
 					delete __positionableMembers[target];
 				} else {
 					delete __targetMembers[target];
@@ -274,7 +274,7 @@ package org.typefest.layout.tables {
 		// clear members
 		public function clearMembers():void {
 			for (var p:* in __positionableMembers) {
-				p.parent = null;
+				p.parentArea = null;
 			}
 			__sequence            = [];
 			__positionableMembers = new Dictionary(false);
@@ -306,10 +306,10 @@ package org.typefest.layout.tables {
 			if (target is IPositionable) {
 				var p:IPositionable = target as IPositionable;
 				
-				if (p.parent) {
-					p.parent.remove(p);
+				if (p.parentArea) {
+					p.parentArea.remove(p);
 				}
-				p.parent = this;
+				p.parentArea = this;
 				
 				__positionableMembers[p] = true;
 			} else {
@@ -327,7 +327,7 @@ package org.typefest.layout.tables {
 		}
 		protected function _removeMember(target:*):void {
 			if (target in __positionableMembers) {
-				target.parent = null;
+				target.parentArea = null;
 				delete __positionableMembers[target];
 			} else {
 				delete __targetMembers[target];
@@ -335,7 +335,7 @@ package org.typefest.layout.tables {
 		}
 		
 		//---------------------------------------
-		// update before parent’s update
+		// update before parentArea’s update
 		//---------------------------------------
 		protected function _updateTable(start:int = 0):void {
 			var size:Rectangle = new Rectangle();
@@ -369,8 +369,8 @@ package org.typefest.layout.tables {
 				_rect.width  = size.width;
 				_rect.height = size.height;
 				
-				if (_parent) {
-					_parent.update(this);
+				if (_parentArea) {
+					_parentArea.update(this);
 				} else {
 					_update();
 				}

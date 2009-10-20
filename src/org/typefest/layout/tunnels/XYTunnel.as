@@ -96,7 +96,7 @@ package org.typefest.layout.tunnels {
 			throw new IllegalOperationError("set() is not callable.");
 		}
 		// area
-		override public function set parent(x:Area):void {
+		override public function set parentArea(x:Area):void {
 			throw new IllegalOperationError("Tunnel cannot be a child.");
 		}
 		

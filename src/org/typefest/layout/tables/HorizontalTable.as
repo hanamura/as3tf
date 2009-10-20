@@ -72,8 +72,8 @@ package org.typefest.layout.tables {
 				_rect.width  = size.width;
 				_rect.height = size.height;
 				
-				if (_parent) {
-					_parent.update(this);
+				if (_parentArea) {
+					_parentArea.update(this);
 				} else {
 					_update();
 				}

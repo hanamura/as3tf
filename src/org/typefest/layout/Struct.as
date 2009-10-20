@@ -35,8 +35,8 @@ package org.typefest.layout {
 		public function get apply():Function { return _apply; }
 		public function set apply(x:Function):void { _apply = x; }
 
-		public function get parent():Area { return null; }
-		public function set parent(x:Area):void {}
+		public function get parentArea():Area { return null; }
+		public function set parentArea(x:Area):void {}
 
 		public function Struct(
 			target:*,

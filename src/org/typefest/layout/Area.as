@@ -154,18 +154,18 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
-		// parent / root
+		// parentArea / root
 		//---------------------------------------
-		protected var _parent:Area = null;
+		protected var _parentArea:Area = null;
 
-		public function get parent():Area {
-			return _parent;
+		public function get parentArea():Area {
+			return _parentArea;
 		}
-		public function set parent(area:Area):void {
-			_parent = area;
+		public function set parentArea(area:Area):void {
+			_parentArea = area;
 		}
-		public function get root():Area {
-			return _parent ? _parent.root : this;
+		public function get rootArea():Area {
+			return _parentArea ? _parentArea.rootArea : this;
 		}
 		
 		//---------------------------------------
@@ -217,10 +217,10 @@ package org.typefest.layout {
 			if (target is IPositionable) {
 				var p:IPositionable = target as IPositionable;
 				
-				if (p.parent) {
-					p.parent.remove(p);
+				if (p.parentArea) {
+					p.parentArea.remove(p);
 				}
-				p.parent = this;
+				p.parentArea = this;
 				
 				__positionables[p] = true;
 				
@@ -246,7 +246,7 @@ package org.typefest.layout {
 		//---------------------------------------
 		public function remove(t:*):void {
 			if (t in __positionables) {
-				t.parent = null;
+				t.parentArea = null;
 				delete __positionables[t];
 			} else if (t in __targets) {
 				delete __targets[t];
@@ -258,7 +258,7 @@ package org.typefest.layout {
 		//---------------------------------------
 		public function clear():void {
 			for (var p:* in __positionables) {
-				p.parent = null;
+				p.parentArea = null;
 			}
 			__positionables = new Dictionary(true);
 			__targets       = new Dictionary(true);
@@ -276,11 +276,11 @@ package org.typefest.layout {
 		}
 		
 		//---------------------------------------
-		// update by parent
+		// update by parentArea
 		//---------------------------------------
 		protected function _updateByParent():void {
-			if (_parent) {
-				_parent.update(this);
+			if (_parentArea) {
+				_parentArea.update(this);
 			}
 		}
 		
