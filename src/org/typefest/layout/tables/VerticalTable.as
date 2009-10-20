@@ -40,6 +40,10 @@ package org.typefest.layout.tables {
 			throw new IllegalOperationError("Unable to set lengthY.");
 		}
 		
+		public function get length():int {
+			return _lengthX;
+		}
+		
 		//---------------------------------------
 		// cell size
 		//---------------------------------------

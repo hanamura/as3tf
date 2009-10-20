@@ -127,7 +127,10 @@ package org.typefest.layout.tunnels {
 			rect.y      = Num.between(_from.y,      _to.y,      _ratioY);
 			rect.height = Num.between(_from.height, _to.height, _ratioY);
 			
-			// set rectangle
+			_applyToUpdate(rect);
+		}
+		
+		protected function _applyToUpdate(rect:Rectangle):void {
 			var some:Boolean = false;
 			
 			if (_rect.x !== rect.x) {

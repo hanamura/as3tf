@@ -20,7 +20,13 @@ package org.typefest.layout.table {
 				_updateTable();
 			}
 		}
+		public function get length():int {
+			return _lengthY;
+		}
 		
+		//---------------------------------------
+		// Constructor
+		//---------------------------------------
 		public function HorizontalTable(lengthY:int = 1) {
 			super();
 			
