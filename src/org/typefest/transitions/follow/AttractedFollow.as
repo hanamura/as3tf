@@ -8,7 +8,7 @@ package org.typefest.transitions.follow {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	
-	public class AttractedFollow extends Follow {
+	dynamic public class AttractedFollow extends Follow {
 		protected var _rate:Number = 0;
 		protected var _drop:Number = 0;
 		
