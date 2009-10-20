@@ -23,7 +23,7 @@ package org.typefest.layout.tunnels {
 		public function set offsetX(x:Number):void {
 			if (_offsetX !== x) {
 				_offsetX = x;
-				_updateArea();
+				_updateByOffset();
 			}
 		}
 		public function get offsetY():Number {
@@ -32,7 +32,7 @@ package org.typefest.layout.tunnels {
 		public function set offsetY(y:Number):void {
 			if (_offsetY !== y) {
 				_offsetY = y;
-				_updateArea();
+				_updateByOffset();
 			}
 		}
 		
@@ -53,10 +53,30 @@ package org.typefest.layout.tunnels {
 		// forbidden
 		//---------------------------------------
 		override public function set ratioX(x:Number):void {
-			offsetX = rangeX * x;
+			if (_ratioX !== x) {
+				_ratioX = x;
+				_updateByRatio();
+			}
 		}
 		override public function set ratioY(y:Number):void {
-			offsetY = rangeY * y;
+			if (_ratioY !== y) {
+				_ratioY = y;
+				_updateByRatio();
+			}
+		}
+		
+		//---------------------------------------
+		// offset enabled
+		//---------------------------------------
+		protected var _offsetEnabled:Boolean = true;
+		
+		public function get offsetEnabled():Boolean {
+			return _offsetEnabled;
+		}
+		public function set offsetEnabled(bool:Boolean):void {
+			if (_offsetEnabled !== bool) {
+				_offsetEnabled = bool;
+			}
 		}
 		
 		//---------------------------------------
@@ -66,24 +86,37 @@ package org.typefest.layout.tunnels {
 			super(from, to);
 		}
 		
+		//---------------------------------------
+		// updates
+		//---------------------------------------
 		override protected function _updateArea():void {
-			// update range
 			_rangeX = _to.x - _from.x;
 			_rangeY = _to.y - _from.y;
 			
-			// update by offset
-			var rect:Rectangle = new Rectangle();
-			
-			rect.x = _from.x + _offsetX;
-			rect.y = _from.y + _offsetY;
-			
+			if (_offsetEnabled) {
+				_updateByOffset();
+			} else {
+				_updateByRatio();
+			}
+		}
+		protected function _updateByOffset():void {
 			_ratioX = (_rangeX === 0) ? 0 : (_offsetX / _rangeX);
 			_ratioY = (_rangeY === 0) ? 0 : (_offsetY / _rangeY);
 			
+			var rect:Rectangle = new Rectangle();
+			
+			rect.x      = _from.x + _offsetX;
+			rect.y      = _from.y + _offsetY;
 			rect.width  = Num.between(_from.width, _to.width, _ratioX);
 			rect.height = Num.between(_from.height, _to.height, _ratioY);
 			
 			_applyToUpdate(rect);
+		}
+		protected function _updateByRatio():void {
+			_offsetX = _rangeX * _ratioX;
+			_offsetY = _rangeY * _ratioY;
+			
+			super._updateArea();
 		}
 	}
 }

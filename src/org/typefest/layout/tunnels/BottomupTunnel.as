@@ -4,7 +4,6 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.layout.tunnels {
-	// import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import org.typefest.layout.Layout;
@@ -64,21 +63,6 @@ package org.typefest.layout.tunnels {
 			_to.original   = new Rectangle(0, 0, width, height);
 			
 			_update();
-		}
-		
-		override protected function _updateArea():void {
-			_rangeX = _to.x - _from.x;
-			_rangeY = _to.y - _from.y;
-			
-			var rect:Rectangle = new Rectangle();
-			
-			rect.x = _from.x + _offsetX;
-			rect.y = _from.y + _offsetY;
-			
-			_ratioX = (_rangeX === 0) ? 0 : (_offsetX / _rangeX);
-			_ratioY = (_rangeY === 0) ? 0 : (_offsetY / _rangeY);
-			
-			_applyToUpdate(rect);
 		}
 		
 		override protected function _applyToUpdate(rect:Rectangle):void {
