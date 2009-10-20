@@ -3,6 +3,11 @@ Copyright (c) 2009 Taro Hanamura
 See LICENSE.txt for full license information.
 */
 
+/*
+This class depends on Tweensy (0.2.2)
+http://code.google.com/p/tweensy/
+*/
+
 package org.typefest.transitions.follow {
 	import flash.events.Event;
 	
