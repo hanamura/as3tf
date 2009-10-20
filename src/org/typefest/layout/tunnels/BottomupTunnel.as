@@ -7,7 +7,7 @@ package org.typefest.layout.tunnels {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import org.typefest.layout.*;
+	import org.typefest.layout.Layout;
 	
 	public class BottomupTunnel extends OffsetTunnel {
 		
