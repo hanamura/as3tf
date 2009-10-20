@@ -43,6 +43,9 @@ package org.typefest.layout.tables {
 		public function get length():int {
 			return _lengthX;
 		}
+		public function set length(x:int):void {
+			lengthX = x;
+		}
 		
 		//---------------------------------------
 		// cell size

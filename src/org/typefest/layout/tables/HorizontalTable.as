@@ -3,7 +3,7 @@ Copyright (c) 2009 Taro Hanamura
 See LICENSE.txt for full license information.
 */
 
-package org.typefest.layout.table {
+package org.typefest.layout.tables {
 	import flash.errors.IllegalOperationError;
 	import flash.geom.Rectangle;
 	
@@ -20,8 +20,11 @@ package org.typefest.layout.table {
 				_updateTable();
 			}
 		}
-		public function get length():int {
+		override public function get length():int {
 			return _lengthY;
+		}
+		override public function set length(y:int):void {
+			lengthY = y;
 		}
 		
 		//---------------------------------------

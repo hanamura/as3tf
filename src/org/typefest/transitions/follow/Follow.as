@@ -12,6 +12,7 @@ package org.typefest.transitions.follow {
 	import flash.utils.flash_proxy;
 	import flash.utils.Proxy;
 	
+	[Event(name="complete", type="flash.events.Event.COMPLETE")]
 	dynamic public class Follow extends Proxy implements IEventDispatcher {
 		static protected function __key(name:*):String {
 			if (name is QName) {
@@ -176,6 +177,13 @@ package org.typefest.transitions.follow {
 			if (_.length > 0) {
 				_cancelKeys.apply(null, _);
 			}
+		}
+		
+		//---------------------------------------
+		// get current value
+		//---------------------------------------
+		protected function $(key:String):* {
+			return _curr[key];
 		}
 		
 		//---------------------------------------
