@@ -145,12 +145,7 @@ package org.typefest.interaction.drag {
 		//---------------------------------------
 		// test
 		//---------------------------------------
-		protected function _test(
-			// targetMouse:Point,
-			// stageMouse:Point,
-			// currentTargetMouse:Point,
-			// currentStageMouse:Point
-		):Boolean {
+		protected function _test():Boolean {
 			return true;
 		}
 	}
