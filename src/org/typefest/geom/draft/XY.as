@@ -265,5 +265,20 @@ package org.typefest.geom.draft {
 		untyped static function compose(radian:Number, magnitude:Number):* {
 			return toObject(compose(radian, magnitude));
 		}
+		
+		static public function average(...points:Array):Point {
+			var _:Point = new Point();
+			
+			for each (var point:Point in points) {
+				_.offset(point.x, point.y);
+			}
+			_.x /= points.length;
+			_.y /= points.length;
+			
+			return _;
+		}
+		static untyped function average(...points:Array):* {
+			return toObject(average.apply(null, Arr.map(toPoint, points)));
+		}
 	}
 }
