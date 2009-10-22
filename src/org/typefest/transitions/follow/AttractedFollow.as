@@ -5,21 +5,24 @@ See LICENSE.txt for full license information.
 
 package org.typefest.transitions.follow {
 	import flash.display.Bitmap;
-	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	
 	dynamic public class AttractedFollow extends Follow {
 		protected var _rate:Number = 0;
 		protected var _drop:Number = 0;
-		
-		protected var _done:*               = null;
-		protected var _engine:DisplayObject = null;
 		
 		public function get rate():Number {
 			return _rate;
 		}
 		public function get drop():Number {
 			return _drop;
+		}
+		
+		protected var _engine:IEventDispatcher = null;
+		
+		override public function get moving():Boolean {
+			return _engine !== null;
 		}
 		
 		//---------------------------------------
@@ -35,64 +38,69 @@ package org.typefest.transitions.follow {
 			
 			_rate = rate;
 			_drop = drop;
-			
-			_engine = new Bitmap();
 		}
 		
 		//---------------------------------------
 		// main
 		//---------------------------------------
 		override protected function _updateKeys(...keys:Array):void {
-			_moving = true;
-			
-			_done = {};
-			
-			for (var key:String in _dest) {
-				_done[key] = false;
+			if (!_engine) {
+				for (var key:String in _dest) {
+					if (_dest[key] !== _curr[key]) {
+						_engine = new Bitmap();
+						_engine.addEventListener(Event.ENTER_FRAME, _update);
+						dispatchEvent(new Event(Event.OPEN));
+						return;
+					}
+				}
 			}
-			
-			_engine.addEventListener(Event.ENTER_FRAME, _update, false, 0, true);
 		}
 		override protected function _cancelKeys(...keys:Array):void {
-			_moving = false;
-			
-			_engine.removeEventListener(Event.ENTER_FRAME, _update, false);
-			
-			dispatchEvent(new Event(Event.COMPLETE));
+			if (_engine) {
+				for (var key:String in _dest) {
+					if (_dest[key] !== _curr[key]) {
+						return;
+					}
+				}
+				_engine.removeEventListener(Event.ENTER_FRAME, _update);
+				_engine = null;
+				
+				dispatchEvent(new Event(Event.COMPLETE));
+			}
 		}
 		protected function _update(e:Event):void {
-			var dist:Number;
+			var sub:Number;
 			var option:Option;
 			var rate:Number;
 			var drop:Number;
+			var key:String;
 			
-			for (var key:String in _dest) {
-				if (_done[key]) {
+			for (key in _dest) {
+				sub = _dest[key] - _curr[key];
+				
+				if (sub === 0) {
 					continue;
 				}
-				
-				dist = _dest[key] - _curr[key];
 				
 				option = getOption(key);
 				rate   = option ? option.rate : _rate;
 				drop   = option ? option.drop : _drop;
 				
-				if (Math.abs(dist) <= drop) {
+				if (Math.abs(sub) <= drop) {
 					_curr[key] = _dest[key];
-					_done[key] = true;
 				} else {
-					_curr[key] = _curr[key] + (dist * rate);
+					_curr[key] = _curr[key] + (sub * rate);
 				}
 			}
 			
-			for each (var bool:Boolean in _done) {
-				if (!bool) {
+			for (key in _dest) {
+				if (_dest[key] !== _curr[key]) {
 					return;
 				}
 			}
 			
-			_moving = false;
-			_engine.removeEventListener(Event.ENTER_FRAME, _update, false);
+			_engine.removeEventListener(Event.ENTER_FRAME, _update);
+			_engine = null;
 			
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
