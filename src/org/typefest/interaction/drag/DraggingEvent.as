@@ -11,9 +11,11 @@ package org.typefest.interaction.drag {
 	import org.typefest.interaction.drag.Dragging;
 	
 	public class DraggingEvent extends Event {
-		static public const START:String = "DraggingEvent.START";
-		static public const DRAG:String  = "DraggingEvent.DRAG";
-		static public const END:String   = "DraggingEvent.END";
+		static public const CATCH:String   = "DraggingEvent.CATCH";
+		static public const RELEASE:String = "DraggingEvent.RELEASE";
+		static public const START:String   = "DraggingEvent.START";
+		static public const DRAG:String    = "DraggingEvent.DRAG";
+		static public const END:String     = "DraggingEvent.END";
 		
 		//---------------------------------------
 		// instance

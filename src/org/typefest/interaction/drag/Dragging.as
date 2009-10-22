@@ -55,8 +55,13 @@ package org.typefest.interaction.drag {
 		protected function _down(e:MouseEvent = null):void {
 			_stage = _target.stage;
 			
-			_targetMouse = new Point(_target.mouseX, _target.mouseY);
-			_stageMouse  = new Point(_stage.mouseX, _stage.mouseY);
+			_targetPoint     = new Point(_target.x, _target.y);
+			_targetMouse     = new Point(_target.mouseX, _target.mouseY);
+			_stageMouse      = new Point(_stage.mouseX, _stage.mouseY);
+			_lastTargetMouse = new Point(_target.mouseX, _target.mouseY);
+			_lastStageMouse  = new Point(_stage.mouseX, _stage.mouseY);
+			
+			_dispatch(DraggingEvent.CATCH);
 			
 			_check();
 		}
@@ -77,11 +82,13 @@ package org.typefest.interaction.drag {
 		// escape
 		//---------------------------------------
 		protected function _upIgnore(e:MouseEvent):void {
+			listen(_target, MouseEvent.MOUSE_DOWN, _down);
+			
+			_dispatch(DraggingEvent.RELEASE);
+			
 			_targetMouse = null;
 			_stageMouse  = null;
 			_stage       = null;
-			
-			listen(_target, MouseEvent.MOUSE_DOWN, _down);
 		}
 		
 		//---------------------------------------
