@@ -15,7 +15,9 @@ package org.typefest.interaction.drag {
 	
 	public class Dragging extends Proc {
 		protected var _target:InteractiveObject = null;
-		protected var _stage:Stage              = null;
+		protected var _immediate:Boolean        = false;
+		
+		protected var _stage:Stage = null;
 		
 		protected var _targetPoint:Point     = null;
 		protected var _targetMouse:Point     = null;
@@ -26,10 +28,11 @@ package org.typefest.interaction.drag {
 		//---------------------------------------
 		// Constructor
 		//---------------------------------------
-		public function Dragging(target:InteractiveObject) {
+		public function Dragging(target:InteractiveObject, immediate:Boolean = false) {
 			super();
 			
-			_target = target;
+			_target    = target;
+			_immediate = immediate;
 			
 			fire();
 		}
@@ -39,13 +42,17 @@ package org.typefest.interaction.drag {
 		}
 		
 		override protected function _start():void {
-			listen(_target, MouseEvent.MOUSE_DOWN, _down);
+			if (_immediate) {
+				_down();
+			} else {
+				listen(_target, MouseEvent.MOUSE_DOWN, _down);
+			}
 		}
 		
 		//---------------------------------------
 		// down
 		//---------------------------------------
-		protected function _down(e:MouseEvent):void {
+		protected function _down(e:MouseEvent = null):void {
 			_stage = _target.stage;
 			
 			_targetMouse = new Point(_target.mouseX, _target.mouseY);
