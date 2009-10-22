@@ -51,11 +51,15 @@ package org.typefest.transitions.follow {
 			
 			__ed = new EventDispatcher(this);
 			
+			var keys:Array = [];
 			_dest = {};
 			for (var key:String in init) {
 				_dest[key] = init[key];
+				keys.push(key);
 			}
 			_curr = new ValueProxy(init);
+			
+			_addKeys.apply(null, keys);
 			
 			_options = {};
 			
@@ -96,6 +100,8 @@ package org.typefest.transitions.follow {
 			} else {
 				_dest[key] = value;
 				_curr[key] = value;
+				
+				_addKeys.apply(null, [key]);
 			}
 		}
 		
@@ -150,17 +156,28 @@ package org.typefest.transitions.follow {
 		}
 		
 		public function setValues(values:*):void {
-			var _:Array = [];
+			var adds:Array    = [];
+			var updates:Array = [];
 			
 			for (var key:String in values) {
-				if (_dest[key] !== values[key]) {
+				if (key in _dest) {
+					if (_dest[key] !== values[key]) {
+						_dest[key] = values[key];
+						updates.push(key);
+					}
+				} else {
 					_dest[key] = values[key];
-					_.push(key);
+					_curr[key] = values[key];
+					
+					adds.push(key);
 				}
 			}
 			
-			if (_.length > 0) {
-				_updateKeys.apply(null, _);
+			if (adds.length > 0) {
+				_addKeys.apply(null, adds);
+			}
+			if (updates.length > 0) {
+				_updateKeys.apply(null, updates);
 			}
 		}
 		public function removeKeys(...keys:Array):void {
@@ -189,10 +206,12 @@ package org.typefest.transitions.follow {
 		//---------------------------------------
 		// update
 		//---------------------------------------
+		protected function _addKeys(...keys:Array):void {
+			throw new IllegalOperationError("Override this method.");
+		}
 		protected function _updateKeys(...keys:Array):void {
 			throw new IllegalOperationError("Override this method.");
 		}
-		
 		protected function _cancelKeys(...keys:Array):void {
 			throw new IllegalOperationError("Override this method.");
 		}

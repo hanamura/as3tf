@@ -43,30 +43,31 @@ package org.typefest.transitions.follow {
 		//---------------------------------------
 		// main
 		//---------------------------------------
-		override protected function _updateKeys(...keys:Array):void {
-			if (!_engine) {
-				for (var key:String in _dest) {
-					if (_dest[key] !== _curr[key]) {
-						_engine = new Bitmap();
-						_engine.addEventListener(Event.ENTER_FRAME, _update);
-						dispatchEvent(new Event(Event.OPEN));
-						return;
-					}
+		protected function _needsUpdate():Boolean {
+			for (var key:String in _dest) {
+				if (_dest[key] !== _curr[key]) {
+					return true;
 				}
 			}
+			return false;
 		}
-		override protected function _cancelKeys(...keys:Array):void {
-			if (_engine) {
-				for (var key:String in _dest) {
-					if (_dest[key] !== _curr[key]) {
-						return;
-					}
-				}
+		protected function _checkToSwitch():void {
+			if (!_engine && _needsUpdate()) {
+				_engine = new Bitmap();
+				_engine.addEventListener(Event.ENTER_FRAME, _update);
+				dispatchEvent(new Event(Event.OPEN));
+			} else if (_engine && !_needsUpdate()) {
 				_engine.removeEventListener(Event.ENTER_FRAME, _update);
 				_engine = null;
-				
 				dispatchEvent(new Event(Event.COMPLETE));
 			}
+		}
+		override protected function _addKeys(...keys:Array):void {}
+		override protected function _updateKeys(...keys:Array):void {
+			_checkToSwitch();
+		}
+		override protected function _cancelKeys(...keys:Array):void {
+			_checkToSwitch();
 		}
 		protected function _update(e:Event):void {
 			var sub:Number;
@@ -93,16 +94,7 @@ package org.typefest.transitions.follow {
 				}
 			}
 			
-			for (key in _dest) {
-				if (_dest[key] !== _curr[key]) {
-					return;
-				}
-			}
-			
-			_engine.removeEventListener(Event.ENTER_FRAME, _update);
-			_engine = null;
-			
-			dispatchEvent(new Event(Event.COMPLETE));
+			_checkToSwitch();
 		}
 		
 		//---------------------------------------
