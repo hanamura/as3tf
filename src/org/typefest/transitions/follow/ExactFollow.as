@@ -9,12 +9,12 @@ package org.typefest.transitions.follow {
 			super(target, init);
 		}
 		
+		override protected function _addKeys(...keys:Array):void {}
 		override protected function _updateKeys(...keys:Array):void {
 			for (var key:String in _dest) {
 				_curr[key] = _dest[key];
 			}
 		}
-		
 		override protected function _cancelKeys(...keys:Array):void {}
 	}
 }
