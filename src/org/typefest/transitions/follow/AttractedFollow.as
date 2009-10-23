@@ -83,7 +83,7 @@ package org.typefest.transitions.follow {
 					continue;
 				}
 				
-				option = getOption(key);
+				option = _options[key];
 				rate   = option ? option.rate : _rate;
 				drop   = option ? option.drop : _drop;
 				
