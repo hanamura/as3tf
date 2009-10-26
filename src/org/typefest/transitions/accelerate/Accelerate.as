@@ -116,17 +116,9 @@ package org.typefest.transitions.accelerate {
 			var key:String = __key(name);
 			
 			if (args.length > 0) {
-				if (key in _datas) {
-					_datas[key].option = args[0];
-				} else {
-					throw new IllegalOperationError("Key named " + key + " not found.");
-				}
+				return setOption.apply(null, [key].concat(args));
 			} else {
-				if (key in _datas) {
-					return _datas[key].option;
-				} else {
-					return null;
-				}
+				return getOption(key);
 			}
 		}
 		
@@ -232,6 +224,24 @@ package org.typefest.transitions.accelerate {
 			
 			if (_auto) {
 				_checkToSwitch();
+			}
+		}
+		
+		//---------------------------------------
+		// set / get option
+		//---------------------------------------
+		public function setOption(key:String, ...args:Array):void {
+			if (key in _datas) {
+				_datas[key].option = args[0];
+			} else {
+				throw new ArgumentError("Key named " + key + " not found.");
+			}
+		}
+		public function getOption(key:String):* {
+			if (key in _datas) {
+				return _datas[key].option;
+			} else {
+				return null;
 			}
 		}
 		
