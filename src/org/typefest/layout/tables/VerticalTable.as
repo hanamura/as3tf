@@ -260,6 +260,8 @@ package org.typefest.layout.tables {
 				__sequence.splice(index, 1);
 				
 				_updateTable(index);
+				
+				dispatchEvent(new TableEvent(TableEvent.MEMBER_CHANGE));
 			}
 		}
 		
@@ -324,6 +326,8 @@ package org.typefest.layout.tables {
 				
 				__targetMembers[target] = $;
 			}
+			
+			dispatchEvent(new TableEvent(TableEvent.MEMBER_CHANGE));
 		}
 		protected function _removeMember(target:*):void {
 			if (target in __positionableMembers) {
@@ -332,6 +336,8 @@ package org.typefest.layout.tables {
 			} else {
 				delete __targetMembers[target];
 			}
+			
+			dispatchEvent(new TableEvent(TableEvent.MEMBER_CHANGE));
 		}
 		
 		//---------------------------------------
