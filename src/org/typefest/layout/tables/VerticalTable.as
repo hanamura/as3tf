@@ -161,6 +161,14 @@ package org.typefest.layout.tables {
 			return __sequence.concat();
 		}
 		
+		public function get rectangles():Array {
+			var _:Array = [];
+			for (var i:int = 0; i < __sequence.length; i++) {
+				_.push(_getMemberArea(i));
+			}
+			return _;
+		}
+		
 		//=======================================
 		// 
 		// Constructor
