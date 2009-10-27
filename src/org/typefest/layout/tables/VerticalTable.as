@@ -216,6 +216,21 @@ package org.typefest.layout.tables {
 			_updateTable(0);
 		}
 		
+		public function insert(
+			index:int,
+			target:*,
+			layout:*           = "exactFit",
+			original:Rectangle = null,
+			positionX:*        = 0,
+			positionY:*        = 0,
+			apply:Function     = null
+		):void {
+			_addMember(target, layout, original, positionX, positionY, apply);
+			
+			__sequence.splice(index, 0, target);
+			_updateTable(index);
+		}
+		
 		//---------------------------------------
 		// pop / shift
 		//---------------------------------------
