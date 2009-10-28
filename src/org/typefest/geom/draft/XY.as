@@ -163,31 +163,31 @@ package org.typefest.geom.draft {
 			return magnitude(toPoint(vec));
 		}
 		
-		public static function distance(p1:Point, p2:Point):Number {
-			var subx:Number = p1.x - p2.x;
-			var suby:Number = p1.y - p2.y;
+		public static function distance(a:Point, b:Point):Number {
+			var subx:Number = a.x - b.x;
+			var suby:Number = a.y - b.y;
 			
 			return Math.sqrt((subx * subx) + (suby * suby));
 		}
-		untyped static function distance(v1:*, v2:*):Number {
-			return distance(toPoint(v1), toPoint(v2));
+		untyped static function distance(a:*, b:*):Number {
+			return distance(toPoint(a), toPoint(b));
 		}
 		
-		public static function between(p1:Point, p2:Point, t:Number = 0.5):Point {
-			var x:Number = p1.x + ((p2.x - p1.x) * t);
-			var y:Number = p1.y + ((p2.y - p1.y) * t);
+		public static function between(a:Point, b:Point, t:Number = 0.5):Point {
+			var x:Number = a.x + ((b.x - a.x) * t);
+			var y:Number = a.y + ((b.y - a.y) * t);
 			
 			return new Point(x, y);
 		}
-		untyped static function between(v1:*, v2:*, t:Number = 0.5):* {
-			return toObject(between(toPoint(v1), toPoint(v2), t));
+		untyped static function between(a:*, b:*, t:Number = 0.5):* {
+			return toObject(between(toPoint(a), toPoint(b), t));
 		}
 		
-		public static function equal(p1:Point, p2:Point):Boolean {
-			return p1.x === p2.x && p1.y === p2.y;
+		public static function equal(a:Point, b:Point):Boolean {
+			return a.x === b.x && a.y === b.y;
 		}
-		untyped static function equal(v1:*, v2:*):Boolean {
-			return v1.x === v2.x && v1.y === v2.y;
+		untyped static function equal(a:*, b:*):Boolean {
+			return a.x === b.x && a.y === b.y;
 		}
 		
 		public static function radian(point:Point):Number {
@@ -210,8 +210,8 @@ package org.typefest.geom.draft {
 		public static function swap(point:Point):Point {
 			return new Point(point.y, point.x);
 		}
-		untyped static function swap(vec:*):* {
-			return {x:vec.y, y:vec.x};
+		untyped static function swap(a:*):* {
+			return {x:a.y, y:a.x};
 		}
 		destructive static function swap(point:Point):void {
 			var x:Number = point.x;
