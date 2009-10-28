@@ -219,18 +219,18 @@ package org.typefest.geom.draft {
 			point.y = x;
 		}
 		
-		public static function dot(p1:Point, p2:Point):Number {
-			return (p1.x * p2.x) + (p1.y + p2.y);
+		public static function dot(a:Point, b:Point):Number {
+			return (a.x * b.x) + (a.y * b.y);
 		}
-		untyped static function dot(v1:*, v2:*):Number {
-			return (v1.x * v2.x) + (v1.y * v2.y);
+		untyped static function dot(a:*, b:*):Number {
+			return (a.x * b.x) + (a.y * b.y);
 		}
 		
-		public static function cross(p1:Point, p2:Point):Number {
-			return (p1.x * p2.y) - (p1.y * p2.x);
+		public static function cross(a:Point, b:Point):Number {
+			return (a.x * b.y) - (a.y * b.x);
 		}
-		untyped static function cross(v1:*, v2:*):Number {
-			return (v1.x * v2.y) - (v1.y * v2.x);
+		untyped static function cross(a:*, b:*):Number {
+			return (a.x * b.y) - (a.y * b.x);
 		}
 		
 		public static function normalize(point:Point):Point {
