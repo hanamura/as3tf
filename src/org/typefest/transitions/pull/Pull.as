@@ -223,10 +223,13 @@ package org.typefest.transitions.pull {
 			
 			for (var key:String in _dest) {
 				
-				opt = _opts[key];
-				
-				// define curr
 				sub = _dest[key] - _curr[key];
+				
+				if (sub === 0) {
+					continue;
+				}
+				
+				opt = _opts[key];
 				
 				if (Math.abs(sub) <= opt.drop) {
 					_curr[key] = _dest[key];
