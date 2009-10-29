@@ -13,6 +13,7 @@ package org.typefest.transitions.pull {
 	import flash.utils.Proxy;
 	
 	[Event(name="open", type="flash.events.Event.OPEN")]
+	[Event(name="change", type="flash.events.Event.CHANGE")]
 	[Event(name="close", type="flash.events.Event.CLOSE")]
 	dynamic public class Pull extends Proxy implements IEventDispatcher {
 		static protected function __key(name:*):String {
