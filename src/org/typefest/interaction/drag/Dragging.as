@@ -141,7 +141,7 @@ package org.typefest.interaction.drag {
 		protected function _dispatch(type:String):void {
 			var event:Event = new DraggingEvent(
 				type,
-				false,
+				true,
 				false,
 				_targetPoint,
 				_targetMouse,
