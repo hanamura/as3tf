@@ -4,6 +4,7 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.core {
+	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import org.typefest.namespaces.destructive;
@@ -96,6 +97,13 @@ package org.typefest.core {
 			return function(obj:*):Boolean {
 				return cl === Class(getDefinitionByName(getQualifiedClassName(obj)));
 			}
+		}
+		
+		static public function clone(a:*):* {
+			var ba:ByteArray = new ByteArray();
+			ba.writeObject(a);
+			ba.position = 0;
+			return ba.readObject();
 		}
 	}
 }
