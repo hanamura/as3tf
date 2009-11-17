@@ -193,6 +193,15 @@ package org.typefest.transitions.pull {
 			}
 			return _curr[key];
 		}
+		public function offset(key:String, value:Number):void {
+			if (!(key in _dest)) {
+				throw new ArgumentError("Key " + key + " not found.");
+			}
+			if (value) {
+				_dest[key] += value;
+				_curr[key] += value;
+			}
+		}
 		
 		//---------------------------------------
 		// adjust
