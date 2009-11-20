@@ -4,6 +4,7 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.interaction.drag {
+	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -17,12 +18,15 @@ package org.typefest.interaction.drag {
 		protected var _target:InteractiveObject = null;
 		protected var _immediate:Boolean        = false;
 		
-		protected var _stage:Stage = null;
+		protected var _parent:DisplayObjectContainer = null;
+		protected var _stage:Stage                   = null;
 		
 		protected var _targetPoint:Point     = null;
 		protected var _targetMouse:Point     = null;
+		protected var _parentMouse:Point     = null;
 		protected var _stageMouse:Point      = null;
 		protected var _lastTargetMouse:Point = null;
+		protected var _lastParentMouse:Point = null;
 		protected var _lastStageMouse:Point  = null;
 		
 		//---------------------------------------
@@ -53,13 +57,16 @@ package org.typefest.interaction.drag {
 		// down
 		//---------------------------------------
 		protected function _down(e:MouseEvent = null):void {
-			_stage = _target.stage;
+			_parent = _target.parent;
+			_stage  = _target.stage;
 			
 			_targetPoint     = new Point(_target.x, _target.y);
 			_targetMouse     = new Point(_target.mouseX, _target.mouseY);
+			_parentMouse     = new Point(_parent.mouseX, _parent.mouseY);
 			_stageMouse      = new Point(_stage.mouseX, _stage.mouseY);
-			_lastTargetMouse = new Point(_target.mouseX, _target.mouseY);
-			_lastStageMouse  = new Point(_stage.mouseX, _stage.mouseY);
+			_lastTargetMouse = _targetMouse.clone();// new Point(_target.mouseX, _target.mouseY);
+			_lastParentMouse = _parentMouse.clone();
+			_lastStageMouse  = _stageMouse.clone();// new Point(_stage.mouseX, _stage.mouseY);
 			
 			_dispatch(DraggingEvent.CATCH);
 			
@@ -68,6 +75,7 @@ package org.typefest.interaction.drag {
 		
 		protected function _check():void {
 			_lastTargetMouse = new Point(_target.mouseX, _target.mouseY);
+			_lastParentMouse = new Point(_parent.mouseX, _parent.mouseY);
 			_lastStageMouse  = new Point(_stage.mouseX, _stage.mouseY);
 			
 			if (_test()) {
@@ -87,7 +95,9 @@ package org.typefest.interaction.drag {
 			_dispatch(DraggingEvent.RELEASE);
 			
 			_targetMouse = null;
+			_parentMouse = null;
 			_stageMouse  = null;
+			_parent      = null;
 			_stage       = null;
 		}
 		
@@ -97,8 +107,10 @@ package org.typefest.interaction.drag {
 		protected function _startDrag():void {
 			_targetPoint     = new Point(_target.x, _target.y);
 			_targetMouse     = new Point(_target.mouseX, _target.mouseY);
+			_parentMouse     = new Point(_parent.mouseX, _parent.mouseY);
 			_stageMouse      = new Point(_stage.mouseX, _stage.mouseY);
 			_lastTargetMouse = _targetMouse.clone();
+			_lastParentMouse = _parentMouse.clone();
 			_lastStageMouse  = _stageMouse.clone();
 			
 			listen(_stage, MouseEvent.MOUSE_UP, _up);
@@ -113,13 +125,16 @@ package org.typefest.interaction.drag {
 			listen(_stage, MouseEvent.MOUSE_UP, _up);
 			
 			var targetMouse:Point = new Point(_target.mouseX, _target.mouseY);
+			var parentMouse:Point = new Point(_parent.mouseX, _parent.mouseY);
 			var stageMouse:Point  = new Point(_stage.mouseX, _stage.mouseY);
 			
 			if (
 				   !_lastTargetMouse.equals(targetMouse)
+				|| !_lastParentMouse.equals(parentMouse)
 				|| !_lastStageMouse.equals(stageMouse)
 			) {
 				_lastTargetMouse = targetMouse;
+				_lastParentMouse = parentMouse;
 				_lastStageMouse  = stageMouse;
 				
 				_dispatch(DraggingEvent.DRAG);
@@ -127,7 +142,8 @@ package org.typefest.interaction.drag {
 		}
 		
 		protected function _up(e:MouseEvent):void {
-			_stage = null;
+			_parent = null;
+			_stage  = null;
 			
 			listen(_target, MouseEvent.MOUSE_DOWN, _down);
 			
@@ -145,8 +161,10 @@ package org.typefest.interaction.drag {
 				false,
 				_targetPoint,
 				_targetMouse,
+				_parentMouse,
 				_stageMouse,
 				_lastTargetMouse,
+				_lastParentMouse,
 				_lastStageMouse,
 				_target,
 				this
