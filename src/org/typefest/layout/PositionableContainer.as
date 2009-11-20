@@ -10,6 +10,10 @@ package org.typefest.layout {
 	public class PositionableContainer extends Sprite implements IPositionable {
 		protected var _area:Area = new Area();
 		
+		public function get area():Area {
+			return _area;
+		}
+		
 		//---------------------------------------
 		// size
 		//---------------------------------------
