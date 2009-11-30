@@ -64,9 +64,9 @@ package org.typefest.interaction.drag {
 			_targetMouse     = new Point(_target.mouseX, _target.mouseY);
 			_parentMouse     = new Point(_parent.mouseX, _parent.mouseY);
 			_stageMouse      = new Point(_stage.mouseX, _stage.mouseY);
-			_lastTargetMouse = _targetMouse.clone();// new Point(_target.mouseX, _target.mouseY);
+			_lastTargetMouse = _targetMouse.clone();
 			_lastParentMouse = _parentMouse.clone();
-			_lastStageMouse  = _stageMouse.clone();// new Point(_stage.mouseX, _stage.mouseY);
+			_lastStageMouse  = _stageMouse.clone();
 			
 			_dispatch(DraggingEvent.CATCH);
 			
