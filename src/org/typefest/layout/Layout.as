@@ -237,9 +237,9 @@ package org.typefest.layout {
 		//---------------------------------------
 		static public function margin(
 			layout:Function,
-			left:Number = 0,
-			right:Number = 0,
-			top:Number = 0,
+			left:Number   = 0,
+			right:Number  = 0,
+			top:Number    = 0,
 			bottom:Number = 0
 		):Function {
 			var _area:Rectangle = new Rectangle();
@@ -262,9 +262,9 @@ package org.typefest.layout {
 		//---------------------------------------
 		static public function scale(
 			layout:Function,
-			left:Number = 0,
-			right:Number = 0,
-			top:Number = 0,
+			left:Number   = 0,
+			right:Number  = 0,
+			top:Number    = 0,
 			bottom:Number = 0
 		):Function {
 			var _area:Rectangle = new Rectangle();
