@@ -76,6 +76,16 @@ package org.typefest.core {
 				}
 			}
 		}
+		static public function loopedShift(...args:Array):Function {
+			var store:Array = args.concat();
+			
+			return function():* {
+				if (!args.length) {
+					args = store.concat();
+				}
+				return args.splice(Math.floor(Math.random() * args.length), 1)[0];
+			}
+		}
 		
 		/*
 		
