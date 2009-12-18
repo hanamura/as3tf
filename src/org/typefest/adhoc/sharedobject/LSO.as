@@ -5,11 +5,14 @@ See LICENSE.txt for full license information.
 
 package org.typefest.adhoc.sharedobject {
 	import flash.errors.IllegalOperationError;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import flash.net.SharedObject;
 	import flash.utils.flash_proxy;
 	import flash.utils.Proxy;
 	
-	dynamic public class LSO extends Proxy {
+	dynamic public class LSO extends Proxy implements IEventDispatcher {
 		/*
 		
 		// usage:
@@ -51,6 +54,8 @@ package org.typefest.adhoc.sharedobject {
 		//---------------------------------------
 		// Instance
 		//---------------------------------------
+		private var __ed:EventDispatcher = null;
+		
 		protected var _so:SharedObject = null;
 		protected var _defaults:*      = null;
 		protected var _dynamic:Boolean = false;
@@ -68,6 +73,9 @@ package org.typefest.adhoc.sharedobject {
 			dyanmic:Boolean = true
 		) {
 			super();
+			
+			__ed = new EventDispatcher(this);
+			
 			_so       = SharedObject.getLocal(name, path);
 			_defaults = defaults ? defaults : {};
 			_dynamic  = dyanmic;
@@ -115,8 +123,12 @@ package org.typefest.adhoc.sharedobject {
 			var key:String = _toKey(name);
 			
 			if (_dynamic || key in _defaults) {
-				_so.data[key] = value;
-				_safeFlush();
+				if (_so.data[key] !== value) {
+					_so.data[key] = value;
+					_safeFlush();
+					
+					dispatchEvent(new Event(Event.CHANGE));
+				}
 			} else {
 				throw new IllegalOperationError('Unable to set "' + key + '"');
 			}
@@ -131,13 +143,31 @@ package org.typefest.adhoc.sharedobject {
 		override flash_proxy function deleteProperty(name:*):Boolean {
 			var key:String = _toKey(name);
 			
-			if (key in _so.data) {
-				return delete _so.data[key];
-			} else if (key in _defaults) {
-				return delete _defaults[key];
+			if (_defaults[key] !== _so.data[key]) {
+				var result:Boolean = delete _so.data[key];
+				
+				dispatchEvent(new Event(Event.CHANGE));
+				
+				return result;
 			} else {
-				return false;
+				return delete _so.data[key];
 			}
+		}
+		
+		public function dispose(name:*):Boolean {
+			var key:String   = _toKey(name);
+			var some:Boolean = false;
+			
+			if (key in _so.data) {
+				delete _so.data[key];
+				some = true;
+			}
+			if (key in _defaults) {
+				delete _defaults[key];
+				some = true;
+			}
+			
+			return some;
 		}
 		
 		override flash_proxy function callProperty(name:*, ...args:Array):* {
@@ -190,6 +220,35 @@ package org.typefest.adhoc.sharedobject {
 			try {
 				_so.flush();
 			} catch (e:Error) {}
+		}
+		
+		//---------------------------------------
+		// IEventDispatcher
+		//---------------------------------------
+		public function addEventListener(
+			t:String,
+			l:Function,
+			uc:Boolean = false,
+			p:int      = 0,
+			uw:Boolean = false
+		):void {
+			__ed.addEventListener(t, l, uc, p, uw);
+		}
+		public function removeEventListener(
+			t:String,
+			l:Function,
+			uc:Boolean = false
+		):void {
+			__ed.removeEventListener(t, l, uc);
+		}
+		public function dispatchEvent(e:Event):Boolean {
+			return __ed.dispatchEvent(e);
+		}
+		public function hasEventListener(t:String):Boolean {
+			return __ed.hasEventListener(t);
+		}
+		public function willTrigger(t:String):Boolean {
+			return __ed.willTrigger(t);
 		}
 	}
 }
