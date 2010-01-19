@@ -57,8 +57,8 @@ package org.typefest.time {
 			time = r[0];
 			
 			if (r[1]) {
-				// why specific object? avoiding a runtime bug
-				// https://bugs.adobe.com/jira/browse/ASC-3820?rc=1
+				///// why specific object? avoiding a runtime bug
+				///// https://bugs.adobe.com/jira/browse/ASC-3820
 				_frames[f] = new F(time);
 			} else {
 				_times[f] = getTimer() + (time * 1000);
