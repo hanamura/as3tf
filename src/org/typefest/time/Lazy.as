@@ -129,18 +129,18 @@ package org.typefest.time {
 			}
 			
 			///// stop loop
-			var some:Boolean = false;
+			var none:Boolean = true;
 			
 			for (f in _frames) {
-				some = true;
+				none = false;
 				break;
 			}
 			for (f in _times) {
-				some = true;
+				none = false;
 				break;
 			}
 			
-			if (!some) {
+			if (none) {
 				_engine.removeEventListener(Event.ENTER_FRAME, _check);
 			}
 		}
