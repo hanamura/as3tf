@@ -62,6 +62,22 @@ package org.typefest.core {
 			}
 		}
 		
+		static public function calling(sel:*, ...args:Array):Function {
+			return function(x:*):* {
+				return x[sel].apply(null, args);
+			}
+		}
+		static public function setting(sel:*, value:*):Function {
+			return function(x:*):void {
+				x[sel] = value;
+			}
+		}
+		static public function getting(sel:*):Function {
+			return function(x:*):* {
+				return x[sel];
+			}
+		}
+		
 		/*
 		*	// usage:
 		*	

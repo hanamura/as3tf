@@ -322,6 +322,17 @@ package org.typefest.core {
 			}
 		}
 		
+		static public function zip(...arrs:Array):Array {
+			var len:int = Math.min.apply(null, select(arrs, "length"));
+			var _:Array = [];
+			
+			for (var i:int = 0; i < len; i++) {
+				_.push(select(arrs, i));
+			}
+			
+			return _;
+		}
+		
 		public static function foldLeft(fn:Function, init:*, arr:Array):* {
 			if(empty(arr)) {
 				return init;
@@ -338,7 +349,7 @@ package org.typefest.core {
 			}
 		}
 		
-		public static function select(arr:Array, sel:String):Array {
+		public static function select(arr:Array, sel:*):Array {
 			var r:Array = [];
 			var len:int = arr.length;
 			

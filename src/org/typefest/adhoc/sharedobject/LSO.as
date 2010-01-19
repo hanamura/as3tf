@@ -56,10 +56,11 @@ package org.typefest.adhoc.sharedobject {
 		//---------------------------------------
 		private var __ed:EventDispatcher = null;
 		
-		protected var _so:SharedObject = null;
-		protected var _defaults:*      = null;
-		protected var _dynamic:Boolean = false;
-		protected var _methods:*       = null;
+		protected var _so:SharedObject   = null;
+		protected var _defaults:*        = null;
+		protected var _dynamic:Boolean   = false;
+		protected var _autoFlush:Boolean = false;
+		protected var _methods:*         = null;
 		
 		protected var _keys:Array = null;
 		
@@ -69,16 +70,18 @@ package org.typefest.adhoc.sharedobject {
 		public function LSO(
 			name:String,
 			path:String,
-			defaults:* = null,
-			dyanmic:Boolean = true
+			defaults:*        = null,
+			dyanmic:Boolean   = true,
+			autoFlush:Boolean = false
 		) {
 			super();
 			
 			__ed = new EventDispatcher(this);
 			
-			_so       = SharedObject.getLocal(name, path);
-			_defaults = defaults ? defaults : {};
-			_dynamic  = dyanmic;
+			_so        = SharedObject.getLocal(name, path);
+			_defaults  = defaults ? defaults : {};
+			_dynamic   = dyanmic;
+			_autoFlush = autoFlush;
 			
 			_methods = {
 				//---------------------------------------
@@ -112,7 +115,7 @@ package org.typefest.adhoc.sharedobject {
 			
 			if (!(key in _so.data) && key in _defaults) {
 				_so.data[key] = _defaults[key];
-				_safeFlush();
+				_autoFlush && flush();
 			}
 			return _so.data[key];
 			
@@ -125,7 +128,7 @@ package org.typefest.adhoc.sharedobject {
 			if (_dynamic || key in _defaults) {
 				if (_so.data[key] !== value) {
 					_so.data[key] = value;
-					_safeFlush();
+					_autoFlush && flush();
 					
 					dispatchEvent(new Event(Event.CHANGE));
 				}
@@ -216,7 +219,12 @@ package org.typefest.adhoc.sharedobject {
 		//---------------------------------------
 		// Shortcuts
 		//---------------------------------------
-		protected function _safeFlush():void {
+		// protected function _safeFlush():void {
+		// 	try {
+		// 		_so.flush();
+		// 	} catch (e:Error) {}
+		// }
+		public function flush():void {
 			try {
 				_so.flush();
 			} catch (e:Error) {}

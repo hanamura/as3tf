@@ -6,6 +6,7 @@ See LICENSE.txt for full license information.
 package org.typefest.display {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.geom.Point;
 	
 	public class DOC {
 		
@@ -114,15 +115,15 @@ package org.typefest.display {
 			return r;
 		}
 		
-		public static function root(
-			dobj:DisplayObject
-		):DisplayObject {
-			if(dobj.parent === null) {
-				return dobj;
-			} else {
-				return arguments.callee(dobj.parent);
-			}
-		}
+		// public static function root(
+		// 	dobj:DisplayObject
+		// ):DisplayObject {
+		// 	if(dobj.parent === null) {
+		// 		return dobj;
+		// 	} else {
+		// 		return arguments.callee(dobj.parent);
+		// 	}
+		// }
 		
 		public static function filterChildren(
 			fn:Function,
@@ -137,6 +138,77 @@ package org.typefest.display {
 			}
 			
 			return r;
+		}
+		
+		static public function translate(
+			from:DisplayObject,
+			to:DisplayObject,
+			point:Point = null
+		):Point {
+			// rotation is not supported yet
+			
+			var c:DisplayObject = common(from, to);
+			
+			if (c) {
+				var pf:Point = point ? point.clone() : new Point();
+				
+				var f:DisplayObject = from;
+				
+				while (f !== c) {
+					pf.x *= f.scaleX;
+					pf.y *= f.scaleY;
+					pf.offset(f.x, f.y);
+					f = f.parent;
+				}
+				
+				var t:DisplayObject = to;
+				var paths:Array     = [];
+				
+				while (t !== c) {
+					paths.push(t);
+					t = t.parent;
+				}
+				
+				while (t = paths.pop()) {
+					pf.offset(-t.x, -t.y);
+					pf.x /= t.scaleX;
+					pf.y /= t.scaleY;
+				}
+				
+				return pf;
+			} else {
+				return null;
+			}
+		}
+		
+		static public function root(d:DisplayObject):DisplayObject {
+			while (d.parent) {
+				d = d.parent;
+			}
+			return d;
+		}
+		static public function common( // find common parent
+			a:DisplayObject,
+			b:DisplayObject
+		):DisplayObject {
+			var target:DisplayObject = a;
+			var parents:Array        = [];
+			
+			while (target) {
+				parents.push(target);
+				target = target.parent;
+			}
+			
+			target = b;
+			
+			while (target) {
+				if (parents.indexOf(target) >= 0) {
+					return target;
+				} else {
+					target = target.parent;
+				}
+			}
+			return null;
 		}
 		
 		// static public function translate(
