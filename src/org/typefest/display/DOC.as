@@ -115,16 +115,6 @@ package org.typefest.display {
 			return r;
 		}
 		
-		// public static function root(
-		// 	dobj:DisplayObject
-		// ):DisplayObject {
-		// 	if(dobj.parent === null) {
-		// 		return dobj;
-		// 	} else {
-		// 		return arguments.callee(dobj.parent);
-		// 	}
-		// }
-		
 		public static function filterChildren(
 			fn:Function,
 			parent:DisplayObjectContainer
@@ -145,7 +135,7 @@ package org.typefest.display {
 			to:DisplayObject,
 			point:Point = null
 		):Point {
-			// rotation is not supported yet
+			///// rotation is not supported yet
 			
 			var c:DisplayObject = common(from, to);
 			
@@ -187,7 +177,7 @@ package org.typefest.display {
 			}
 			return d;
 		}
-		static public function common( // find common parent
+		static public function common( ///// find common parent
 			a:DisplayObject,
 			b:DisplayObject
 		):DisplayObject {
@@ -210,15 +200,5 @@ package org.typefest.display {
 			}
 			return null;
 		}
-		
-		// static public function translate(
-		// 	point:Point,
-		// 	ofObj:DisplayObject,
-		// 	forObj:DisplayObject
-		// ):Point {
-		// 	
-		// 	
-		// 	
-		// }
 	}
 }
