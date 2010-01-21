@@ -7,12 +7,12 @@ package org.typefest.adhoc.events {
 	import flash.events.Event;
 	
 	public class SilentErrorEvent extends Event {
-		static public const ERROR:String          = "error";
-		static public const IO_ERROR:String       = "ioError";
-		static public const SECURITY_ERROR:String = "securityError";
+		static public const ERROR:String          = "SilentErrorEvent.ERROR";
+		static public const IO_ERROR:String       = "SilentErrorEvent.IO_ERROR";
+		static public const SECURITY_ERROR:String = "SilentErrorEvent.SECURITY_ERROR";
 		
 		// remote resource is not valid
-		static public const RESOURCE_ERROR:String = "resourceError";
+		static public const RESOURCE_ERROR:String = "SilentErrorEvent.RESOURCE_ERROR";
 		
 		//---------------------------------------
 		// Instance
