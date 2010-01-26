@@ -24,6 +24,6 @@ Main Features
 
 *	**Accessible Primitive Shapes** – simple wrappers for simple shapes
 	
-	See `org.typefest.adhoc.shape.*`
+	See `org.typefest.display.shape.*`
 
 Samples and docs havn’t been written yet.
