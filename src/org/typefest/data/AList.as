@@ -10,7 +10,7 @@ package org.typefest.data {
 	import flash.utils.flash_proxy;
 	import flash.utils.Proxy;
 	
-	public class AList extends Proxy implements IEventDispatcher, IA {
+	public class AList extends Proxy implements IA {
 		static protected function __eq(a:Array, b:Array):Boolean {
 			if (a.length !== b.length) {
 				return false;

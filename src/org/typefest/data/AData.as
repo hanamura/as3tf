@@ -16,7 +16,7 @@ package org.typefest.data {
 	// an alternative class to mx.utils.ObjectProxy
 	
 	*/
-	public class AData extends Proxy implements IEventDispatcher, IA {
+	public class AData extends Proxy implements IA {
 		static protected function __key(name:*):String {
 			if (name is QName) {
 				return name.localName;

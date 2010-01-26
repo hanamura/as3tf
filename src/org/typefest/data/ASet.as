@@ -89,17 +89,7 @@ package org.typefest.data {
 			}
 			
 			if (adds.length) {
-				dispatchEvent(new AEvent(
-					AEvent.CHANGE,
-					false,
-					false,
-					this,
-					new ASetChange(
-						ASetChange.ADD,
-						adds,
-						null
-					)
-				));
+				_dispatch(ASetChange.ADD, adds, null);
 			}
 		}
 		public function remove(...values:Array):void {
@@ -126,17 +116,7 @@ package org.typefest.data {
 			}
 			
 			if (removes.length) {
-				dispatchEvent(new AEvent(
-					AEvent.CHANGE,
-					false,
-					false,
-					this,
-					new ASetChange(
-						ASetChange.REMOVE,
-						null,
-						removes
-					)
-				));
+				_dispatch(ASetChange.REMOVE, null, removes);
 			}
 		}
 		public function has(value:*):Boolean {
@@ -158,18 +138,21 @@ package org.typefest.data {
 			_d = new Dictionary();
 			
 			if (removes.length) {
-				dispatchEvent(new AEvent(
-					AEvent.CHANGE,
-					false,
-					false,
-					this,
-					new ASetChange(
-						ASetChange.REMOVE,
-						null,
-						removes
-					)
-				));
+				_dispatch(ASetChange.REMOVE, null, removes);
 			}
+		}
+		
+		//---------------------------------------
+		// shortcut
+		//---------------------------------------
+		protected function _dispatch(type:String, adds:Array, removes:Array):void {
+			dispatchEvent(new AEvent(
+				AEvent.CHANGE,
+				false,
+				false,
+				this,
+				new ASetChange(type, adds, removes)
+			));
 		}
 		
 		//---------------------------------------
