@@ -25,6 +25,7 @@ package org.typefest.transitions.pull {
 				return String(name);
 			}
 		}
+		static protected const __BITMAP:IEventDispatcher = new Bitmap();
 		
 		//---------------------------------------
 		// instanece
@@ -151,12 +152,12 @@ package org.typefest.transitions.pull {
 		//---------------------------------------
 		protected function _checkToSwitch():void {
 			if (auto && !_engine && !adjusted) {
-				_engine = new Bitmap();
-				_engine.addEventListener(Event.ENTER_FRAME, _step);
+				_engine = __BITMAP;
+				_engine.addEventListener(Event.ENTER_FRAME, _step, false, 0, true);
 				
 				dispatchEvent(new Event(Event.OPEN));
 			} else if ((!auto || adjusted) && _engine) {
-				_engine.removeEventListener(Event.ENTER_FRAME, _step);
+				_engine.removeEventListener(Event.ENTER_FRAME, _step, false);
 				_engine = null;
 				
 				dispatchEvent(new Event(Event.CLOSE));
