@@ -5,15 +5,16 @@ See LICENSE.txt for full license information.
 
 package org.typefest.interaction.track {
 	import flash.display.InteractiveObject;
+	import flash.events.Event;
 	import flash.geom.Point;
 	
 	import org.typefest.proc.Proc;
 	
+	[Event(name="change", type="flash.events.Event.CHANGE")]
 	public class MouseTracking extends Proc {
 		protected var _target:InteractiveObject = null;
 		protected var _length:int               = -1;
 		
-		protected var _origin:Point     = null;
 		protected var _points:Array     = null;
 		protected var _velocities:Array = null;
 		
@@ -53,8 +54,7 @@ package org.typefest.interaction.track {
 		}
 		
 		override protected function _start():void {
-			_origin     = new Point(_target.mouseX, _target.mouseY);
-			_points     = [_origin.clone()];
+			_points     = [new Point(_target.mouseX, _target.mouseY)];
 			_velocities = [];
 			
 			_track();
@@ -79,6 +79,8 @@ package org.typefest.interaction.track {
 			}
 			
 			sleep("1", _track);
+			
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 	}
 }
