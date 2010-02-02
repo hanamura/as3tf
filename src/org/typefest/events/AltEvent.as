@@ -3,7 +3,7 @@ Copyright (c) 2009 Taro Hanamura
 See LICENSE.txt for full license information.
 */
 
-package events {
+package org.typefest.events {
 	import flash.events.Event;
 	
 	public class AltEvent extends Event {
