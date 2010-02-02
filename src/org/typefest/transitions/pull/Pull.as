@@ -258,6 +258,13 @@ package org.typefest.transitions.pull {
 		}
 		
 		//---------------------------------------
+		// to string
+		//---------------------------------------
+		public function toString():String {
+			return "";
+		}
+		
+		//---------------------------------------
 		// proxy
 		//---------------------------------------
 		override flash_proxy function setProperty(name:*, value:*):void {
