@@ -16,6 +16,7 @@ package org.typefest.events {
 		static public const PAUSE:String      = "AltEvent.PAUSE";
 		static public const RESUME:String     = "AltEvent.RESUME";
 		static public const STOP:String       = "AltEvent.STOP";
+		static public const REWIND:String     = "AltEvent.REWIND";
 		
 		static public const INTERRUPT:String  = "AltEvent.INTERRUPT";
 		
@@ -24,6 +25,8 @@ package org.typefest.events {
 		static public const LOOP:String       = "AltEvent.LOOP";
 		static public const REPEAT:String     = "AltEvent.REPEAT";
 		static public const REPOSITION:String = "AltEvent.REPOSITION";
+		static public const REARRANGE:String  = "AltEvent.REARRANGE";
+		static public const RESCALE:String    = "AltEvent.RESCALE";
 		
 		static public const SUCCESS:String    = "AltEvent.SUCCESS";
 		static public const FAIL:String       = "AltEvent.FAIL";
