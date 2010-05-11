@@ -55,7 +55,7 @@ package org.typefest.media {
 			}
 			
 			if (_loaded === _total) {
-				_end();
+				// _end();
 			} else {
 				sleep("1", _check);
 			}
