@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Taro Hanamura
+Copyright (c) 2010 Taro Hanamura
 See LICENSE.txt for full license information.
 */
 
