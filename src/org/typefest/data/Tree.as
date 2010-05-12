@@ -8,6 +8,52 @@ package org.typefest.data {
 	import flash.utils.Proxy;
 	
 	public class Tree extends Proxy {
+		/*
+		
+		// usage
+		
+		var tree:Tree = new Tree();
+		
+		tree.set(["hello", "world", "foo", "bar"], 1);
+		tree.set(["hello", "world"], 2);
+		tree.set(["hello"], 4);
+		tree.set(["hi", "globe", "fu"], 5);
+		
+		trace(tree.get(["hello"]));
+		// 4
+		
+		trace(tree.get(["hello", "world"]));
+		// 2
+		
+		trace(tree.get(["hello", "world", "foo"]));
+		// undefined
+		
+		tree.del(["hello"]);
+		
+		trace(tree.get(["hello"]))
+		// undefined
+		
+		for each (var value:* in tree) {
+			trace(value);
+		}
+		// 2
+		// 1
+		// 5
+		
+		trace(tree.dump());
+		// [key]: hello
+		// 	[key]: world
+		// 		[value]: 2
+		// 		[key]: foo
+		// 			[key]: bar
+		// 				[value]: 1
+		// [key]: hi
+		// 	[key]: globe
+		// 		[key]: fu
+		// 			[value]: 5
+		
+		*/
+		
 		protected var _weakKeys:Boolean = false;
 		protected var _node:Node        = null;
 		
