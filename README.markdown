@@ -13,6 +13,10 @@ Main Features
 *	**Core Utility Functions** – frequently used functions for primitive objects
 	
 	See `org.typefest.core.*`
+	
+*   **Basic Data Structure with Notifications** – map, set, and list with events
+    
+    See `org.typefest.data.*`
 
 *	**Layout** – sizing and positioning objects in a declarative way
 	
