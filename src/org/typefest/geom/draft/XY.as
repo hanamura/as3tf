@@ -190,6 +190,18 @@ package org.typefest.geom.draft {
 			return a.x === b.x && a.y === b.y;
 		}
 		
+		/*
+		
+		trace(Num.radToDeg(XY.radian(new Point( 1,  0)))); // 0
+		trace(Num.radToDeg(XY.radian(new Point( 1,  1)))); // 45.00000000000001
+		trace(Num.radToDeg(XY.radian(new Point( 0,  1)))); // 90
+		trace(Num.radToDeg(XY.radian(new Point(-1,  1)))); // 135
+		trace(Num.radToDeg(XY.radian(new Point(-1,  0)))); // 180
+		trace(Num.radToDeg(XY.radian(new Point(-1, -1)))); // 225
+		trace(Num.radToDeg(XY.radian(new Point( 0, -1)))); // 270
+		trace(Num.radToDeg(XY.radian(new Point( 1, -1)))); // 315
+		
+		*/
 		public static function radian(point:Point):Number {
 			var x:Number = point.x;
 			var y:Number = point.y;

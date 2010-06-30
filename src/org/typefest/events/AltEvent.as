@@ -95,8 +95,20 @@ package org.typefest.events {
 		
 		static public const PREVIEW:String    = "AltEvent.PREVIEW";
 		
-		static public const NEXT:String = "AltEvent.NEXT";
-		static public const PREV:String = "AltEvent.PREV";
+		static public const NEXT:String       = "AltEvent.NEXT";
+		static public const PREV:String       = "AltEvent.PREV";
+		
+		static public const ADD:String        = "AltEvent.ADD";
+		static public const REMOVE:String     = "AltEvent.REMOVE";
+		static public const SET:String        = "AltEvent.SET";
+		static public const GET:String        = "AltEvent.GET";
+		static public const DELETE:String     = "AltEvent.DELETE";
+		
+		static public const LAUNCH:String     = "AltEvent.LAUNCH";
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// instance
@@ -107,8 +119,12 @@ package org.typefest.events {
 			return _data;
 		}
 		
+		
+		
+		
+		
 		//---------------------------------------
-		// Constructor
+		// constructor
 		//---------------------------------------
 		public function AltEvent(
 			type:String,
@@ -121,6 +137,13 @@ package org.typefest.events {
 			_data = data;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// clone
+		//---------------------------------------
 		override public function clone():Event {
 			return new AltEvent(type, bubbles, cancelable, data);
 		}

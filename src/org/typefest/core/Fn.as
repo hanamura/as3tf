@@ -512,5 +512,11 @@ package org.typefest.core {
 					throw new ArgumentError("Too many arguments");
 			}
 		}
+		
+		static public function creating(Klass:Class):Function {
+			return function(...args:Array):* {
+				return create.apply(null, [Klass].concat(args));
+			}
+		}
 	}
 }
