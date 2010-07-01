@@ -9,96 +9,164 @@ package org.typefest.core {
 	import flash.utils.getQualifiedClassName;
 	import org.typefest.namespaces.destructive;
 	
+	
+	
+	
+	
 	public class Misc {
-		/*
-		*	todo:
-		*	
-		*	- make dig safer for premitive values
-		*	
-		*	*/
-		
-		public static function pass(obj:*):* {
-			return obj;
+		//---------------------------------------
+		// identity
+		//---------------------------------------
+		public static function pass(object:*):* {
+			return object;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// strict equality
+		//---------------------------------------
 		public static function eeeq(a:*, b:*):Boolean {
 			return a === b;
 		}
+		public static function eeeqFn(b:*):Function {
+			return function(a:*):Boolean {
+				return a === b;
+			}
+		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// equality
+		//---------------------------------------
 		public static function eeq(a:*, b:*):Boolean {
 			return a == b;
 		}
-		
-		public static function eeeqFn(obj:*):Function {
-			return function(val:*):Boolean {
-				return val === obj;
+		public static function eeqFn(b:*):Function {
+			return function(a:*):Boolean {
+				return a == b;
 			}
 		}
 		
-		public static function eeqFn(obj:*):Function {
-			return function(val:*):Boolean {
-				return val == obj;
+		
+		
+		
+		
+		//---------------------------------------
+		// assign
+		//---------------------------------------
+		destructive static function assign(object:*, key:String, value:*):void {
+			object[key] = value;
+		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// select
+		//---------------------------------------
+		public static function select(object:*, key:String):* {
+			return object[key];
+		}
+		public static function selectFn(key:String):Function {
+			return function(object:*):* {
+				return object[key];
 			}
 		}
 		
-		public static function select(obj:*, sel:String):* {
-			return obj[sel];
-		}
 		
-		public static function selectFn(sel:String):Function {
-			return function(obj:*):* {
-				return obj[sel];
+		
+		
+		
+		//---------------------------------------
+		// dig
+		//---------------------------------------
+		static public function dig(object:*, keys:Array):* {
+			keys = keys.concat();
+			
+			while (keys.length) {
+				object = object[keys.shift()];
+			}
+			return object;
+		}
+		static public function digFn(keys:Array):Function {
+			return function(object:*):* {
+				return dig.apply(null, [object].concat([keys]));
 			}
 		}
 		
-		destructive static function assign(obj:*, sel:String, value:*):void {
-			obj[sel] = value;
-		}
 		
-		public static function dig(obj:*, ...sels:Array):* {
-			var rec:Function = function(obj:*, sels:Array):* {
-				if(obj === null || obj === undefined || Arr.empty(sels)) {
-					return obj;
+		
+		
+		
+		//---------------------------------------
+		// take
+		//---------------------------------------
+		///// exception-free version of dig
+		static public function take(object:*, keys:Array, def:* = null):* {
+			keys = keys.concat();
+			
+			var key:*;
+			
+			while (keys.length) {
+				key = keys.shift();
+				
+				if (object is Object && key in object) {
+					object = object[key];
 				} else {
-					return arguments.callee(obj[Arr.first(sels)], Arr.rest(sels));
+					return def;
 				}
 			}
-			return rec(obj, sels);
+			return object;
 		}
-		
-		public static function digFn(...sels:Array):Function {
-			return function(obj:*):* {
-				return dig.apply(null, Arr.unshift(obj, sels));
+		static public function takeFn(keys:Array, def:* = null):Function {
+			return function(object:*):* {
+				return take.apply(null, [object].concat([keys, def]));
 			}
 		}
 		
-		// destructive static function bury(obj:*, ...rest:Array):void {
-		// 	
-		// }
 		
-		// dig having default
-		public static function strike(obj:*, def:*, ...sels:Array):* {
-			var dug:* = dig.apply(null, Arr.unshift(obj, sels));
-			
-			return (dug === undefined) ? def : dug;
-		}
 		
+		
+		
+		//---------------------------------------
+		// is
+		//---------------------------------------
 		public static function isFn(cl:Class):Function {
 			return function(obj:*):Boolean {
 				return obj is cl;
 			}
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// strict is
+		//---------------------------------------
 		public static function strictIs(obj:*, cl:Class):Boolean {
 			return cl === Class(getDefinitionByName(getQualifiedClassName(obj)));
 		}
-		
 		public static function strictIsFn(cl:Class):Function {
 			return function(obj:*):Boolean {
 				return cl === Class(getDefinitionByName(getQualifiedClassName(obj)));
 			}
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// clone
+		//---------------------------------------
 		static public function clone(a:*):* {
 			var ba:ByteArray = new ByteArray();
 			ba.writeObject(a);

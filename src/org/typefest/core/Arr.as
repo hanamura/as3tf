@@ -6,12 +6,16 @@ See LICENSE.txt for full license information.
 package org.typefest.core {
 	import flash.utils.Dictionary;
 	
+	
+	
+	
+	
 	public class Arr {
 		/*
-		*	- combination(n:int, arr:Array)
-		*	- destructive::pullout(arr:Array, index:int)
-		*	
-		*	*/
+		
+		- combination(n:int, arr:Array)
+		
+		*/
 		
 		public static function index(i:uint, arr:Array):* {
 			return arr[i];
@@ -82,22 +86,31 @@ package org.typefest.core {
 			return arr.concat();
 		}
 		
-		public static function copyTree(arr:Array):Array {
-			var rArr:Array = [];
-			for(var i:int = 0; i < arr.length; i++) {
-				if(arr[i] is Array) {
-					rArr.push(arguments.callee(arr[i]));
+		static public function copyTree(arr:Array):Array {
+			var _:Array = [];
+			
+			for each (var value:* in arr) {
+				if (value is Array) {
+					_.push(copyTree(value));
 				} else {
-					rArr.push(arr[i]);
+					_.push(value);
 				}
 			}
-			return rArr;
+			
+			return _;
 		}
 		
 		public static function array(...args:Array):Array {
 			return args;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// range
+		//---------------------------------------
 		public static function range(...args:Array):Array {
 			var from:Number = 0;
 			var to:Number;
@@ -131,6 +144,11 @@ package org.typefest.core {
 		
 		
 		
+		
+		
+		//---------------------------------------
+		// every / some
+		//---------------------------------------
 		public static function every(fn:Function, arr:Array):Boolean {
 			var len:int = arr.length;
 			for(var i:int = 0; i < len; i++) {
@@ -138,7 +156,6 @@ package org.typefest.core {
 			}
 			return true;
 		}
-		
 		public static function some(fn:Function, arr:Array):Boolean {
 			var len:int = arr.length;
 			for(var i:int = 0; i < len; i++) {
@@ -147,6 +164,13 @@ package org.typefest.core {
 			return false;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// find
+		//---------------------------------------
 		public static function find(fn:Function, arr:Array):Array {
 			var len:int = arr.length;
 			for(var i:int = 0; i < len; i++) {
@@ -157,52 +181,72 @@ package org.typefest.core {
 			return [];
 		}
 		
-		public static function filter(fn:Function, arr:Array):Array {
-			var r:Array = [];
-			var len:int = arr.length;
-			var v:*;
-			for(var i:int = 0; i < len; i++) {
-				fn(v = arr[i]) && r.push(v);
-			}
-			return r;
-		}
 		
-		public static function ifilter(fn:Function, arr:Array):Array {
-			var r:Array = [];
-			var len:int = arr.length;
-			var v:*;
-			for(var i:int = 0; i < len; i++) {
-				fn(v = arr[i], i) && r.push(v);
-			}
-			return r;
-		}
 		
-		public static function filterTree(fn:Function, arr:Array, saveEmpty:Boolean = true):Array {
-			var r:Array = [];
-			var temp:Array;
-			for(var i:int = 0; i < arr.length; i++) {
-				if(arr[i] is Array) {
-					temp = arguments.callee(fn, arr[i], saveEmpty);
-					if(saveEmpty || !Arr.empty(temp)) {
-						r.push(temp);
+		
+		
+		//---------------------------------------
+		// filter
+		//---------------------------------------
+		static public function filter(fn:Function, a:*):Array {
+			var _:Array = [];
+			
+			for each (var value:* in a) {
+				if (fn(value)) {
+					_.push(value);
+				}
+			}
+			return _;
+		}
+		static public function ifilter(fn:Function, a:*):Array {
+			var _:Array = [];
+			var i:int   = 0;
+			
+			for each (var value:* in a) {
+				if (fn(value, i++)) {
+					_.push(value);
+				}
+			}
+			return _;
+		}
+		static public function filterTree(
+			fn:Function,
+			arr:Array,
+			keep:Boolean = true
+		):Array {
+			var _:Array = [];
+			var result:Array;
+			
+			for each (var value:* in arr) {
+				if (value is Array) {
+					result = filterTree(fn, value);
+					
+					if (keep || result.length) {
+						_.push(result);
 					}
 				} else {
-					if(fn(arr[i])) {
-						r.push(arr[i]);
+					if (fn(value)) {
+						_.push(value);
 					}
 				}
 			}
-			return r;
+			
+			return _;
+		}
+		static public function filterCount(fn:Function, a:*):int {
+			var count:int = 0;
+			
+			for each (var value:* in a) {
+				if (fn(value)) {
+					count++;
+				}
+			}
+			return count;
 		}
 		
-		public static function filterCount(fn:Function, arr:Array):int {
-			var c:int = 0;
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				fn(arr[i]) && c++;
-			}
-			return c;
-		}
+		
+		
+		
 		
 		public static function and(arr:Array, ...fns:Array):Array {
 			var rec:Function = function(arr:Array, fns:Array):Array {
@@ -235,93 +279,96 @@ package org.typefest.core {
 			return rec(arr, fns, [], arr.length);
 		}
 		
-		public static function map(fn:Function, arr:Array):Array {
-			var r:Array = [];
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				r.push(fn(arr[i]));
-			}
-			return r;
-		}
 		
-		public static function imap(fn:Function, arr:Array):Array {
-			var r:Array = [];
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				r.push(fn(arr[i], i));
-			}
-			return r;
-		}
 		
-		public static function mapArgs(fn:Function, ...args:Array):Array {
-			var rArr:Array = [];
-			var len:uint = Math.min.apply(null, Arr.map(Arr.length, args));
-			var argList:Array;
-			for(var i:int = 0; i < len; i++) {
-				argList = Arr.map(Fn.reserve(Arr.index, i), args);
-				rArr.push(fn.apply(null, argList));
-			}
-			return rArr;
-		}
 		
-		public static function mapTree(fn:Function, arr:Array):Array {
-			var r:Array = [];
-			for(var i:int = 0; i < arr.length; i++) {
-				if(arr[i] is Array) {
-					r.push(arguments.callee(fn, arr[i]));
+		
+		//---------------------------------------
+		// map
+		//---------------------------------------
+		static public function map(fn:Function, ...arrs:Array):Array {
+			var _:Array = [];
+			var len:int = Math.min.apply(null, select(arrs, "length"));
+			
+			for (var i:int = 0; i < len; i++) {
+				_.push(fn.apply(null, select(arrs, i)));
+			}
+			return _;
+		}
+		static public function imap(fn:Function, ...arrs:Array):Array {
+			var _:Array = [];
+			var len:int = Math.min.apply(null, select(arrs, "length"));
+			
+			for (var i:int = 0; i < len; i++) {
+				_.push(fn.apply(null, select(arrs, i).concat([i])));
+			}
+			return _;
+		}
+		static public function mapTree(fn:Function, a:Array):Array {
+			var _:Array = [];
+			
+			for each (var value:* in a) {
+				if (value is Array) {
+					_.push(mapTree(fn, value));
 				} else {
-					r.push(fn(arr[i]));
+					_.push(fn(value));
 				}
 			}
-			return r;
+			
+			return _;
 		}
-		
-		public static function mapSide(fn:Function, arr:Array):Array {
-			var r:Array = [];
-			for(var i:int = 1; i < arr.length; i++) {
-				r.push(fn(arr[i - 1], arr[i]));
+		static public function mapSide(fn:Function, arr:Array):Array {
+			var _:Array = [];
+			
+			for (var i:int = 1; i < arr.length; i++) {
+				_.push(fn(arr[i - 1], arr[i]));
 			}
-			return r;
+			return _;
 		}
 		
-		public static function each(fn:Function, arr:Array):void {
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				fn(arr[i]);
-			}
-		}
 		
-		public static function ieach(fn:Function, arr:Array):void {
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				fn(arr[i], i);
-			}
-		}
 		
-		public static function eachArgs(fn:Function, ...args:Array):void {
-			var r:Array = [];
-			var len:uint = Math.min.apply(null, Arr.map(Arr.length, args));
-			for(var i:int = 0; i < len; i++) {
-				fn.apply(null, Arr.map(Fn.reserve(Arr.index, i), args));
+		
+		
+		//---------------------------------------
+		// each
+		//---------------------------------------
+		static public function each(fn:Function, ...arrs:Array):void {
+			var len:int = Math.min.apply(null, select(arrs, "length"));
+			
+			for (var i:int = 0; i < len; i++) {
+				fn.apply(null, select(arrs, i));
 			}
 		}
-		
-		public static function eachTree(fn:Function, arr:Array):void {
-			for(var i:int = 0; i < arr.length; i++) {
-				if(arr[i] is Array) {
-					arguments.callee(fn, arr[i]);
+		static public function ieach(fn:Function, ...arrs:Array):void {
+			var len:int = Math.min.apply(null, select(arrs, "length"));
+			
+			for (var i:int = 0; i < len; i++) {
+				fn.apply(null, select(arrs, i).concat([i]));
+			}
+		}
+		static public function eachTree(fn:Function, arr:Array):void {
+			for each (var value:* in arr) {
+				if (value is Array) {
+					eachTree(fn, value);
 				} else {
-					fn(arr[i]);
+					fn(value);
 				}
 			}
 		}
-		
-		public static function eachSide(fn:Function, arr:Array):void {
-			for(var i:int = 1; i < arr.length; i++) {
+		static public function eachSide(fn:Function, arr:Array):void {
+			for (var i:int = 1; i < arr.length; i++) {
 				fn(arr[i - 1], arr[i]);
 			}
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// zip
+		//---------------------------------------
 		static public function zip(...arrs:Array):Array {
 			var len:int = Math.min.apply(null, select(arrs, "length"));
 			var _:Array = [];
@@ -333,32 +380,66 @@ package org.typefest.core {
 			return _;
 		}
 		
-		public static function foldLeft(fn:Function, init:*, arr:Array):* {
-			if(empty(arr)) {
-				return init;
+		
+		
+		
+		//---------------------------------------
+		// fold
+		//---------------------------------------
+		static public function foldLeft(fn:Function, init:*, arr:Array):* {
+			if (arr.length) {
+				return foldLeft(fn, fn(init, arr[0]), arr.slice(1));
 			} else {
-				return arguments.callee(fn, fn(init, first(arr)), rest(arr));
+				return init;
+			}
+		}
+		static public function foldRight(fn:Function, init:*, arr:Array):* {
+			if (arr.length) {
+				return foldRight(fn, fn(arr[arr.length - 1], init), arr.slice(0, -1));
+			} else {
+				return init;
 			}
 		}
 		
-		public static function foldRight(fn:Function, init:*, arr:Array):* {
-			if(empty(arr)) {
-				return init;
-			} else {
-				return arguments.callee(fn, fn(last(arr), init), most(arr));
-			}
-		}
 		
-		public static function select(arr:Array, sel:*):Array {
-			var r:Array = [];
-			var len:int = arr.length;
+		
+		
+		
+		//---------------------------------------
+		// select / dig / take
+		//---------------------------------------
+		static public function select(a:*, key:*):Array {
+			var _:Array = [];
 			
-			for(var i:int = 0; i < len; i++) {
-				r.push(arr[i][sel]);
+			for each (var value:* in a) {
+				_.push(a[key]);
 			}
-			return r;
+			return _;
+		}
+		static public function dig(a:*, keys:Array):Array {
+			var _:Array = [];
+			
+			for each (var value:* in a) {
+				_.push(Misc.dig(value, keys));
+			}
+			return _;
+		}
+		static public function take(a:*, keys:Array, def:* = null):Array {
+			var _:Array = [];
+			
+			for each (var value:* in a) {
+				_.push(Misc.take(value, keys, def));
+			}
+			return _;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// best
+		//---------------------------------------
 		public static function best(fn:Function, arr:Array):* {
 			var r:*     = arr[0];
 			var len:int = arr.length;
@@ -369,25 +450,34 @@ package org.typefest.core {
 			return r;
 		}
 		
-		public static function flatten(arr:Array, level:int = -1):Array {
-			var r:Array = [];
-			var len:uint = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				if(arr[i] is Array) {
-					if(level == 0) {
-						r.push(arr[i]);
-					} else if(level < 0) {
-						r.push.apply(null, arguments.callee(arr[i], level));
-					} else {
-						r.push.apply(null, arguments.callee(arr[i], level - 1));
-					}
+		
+		
+		
+		
+		//---------------------------------------
+		// flatten
+		//---------------------------------------
+		static public function flatten(arr:Array, level:int = -1):Array {
+			var _:Array = [];
+			
+			for each (var value:* in arr) {
+				if (level !== 0 && value is Array) {
+					_.push.apply(null, flatten(value, level - 1));
 				} else {
-					r.push(arr[i]);
+					_.push(value);
 				}
 			}
-			return r;
+			
+			return _;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// slide
+		//---------------------------------------
 		public static function slide(arr:Array, count:int):Array {
 			var r:Array = arr.concat();
 			var reg:int = Num.loop(count, 0, arr.length);
@@ -440,71 +530,109 @@ package org.typefest.core {
 			return false;
 		}
 		
-		/* Array’s order does matter. */
-		public static function equal(arr1:Array, arr2:Array):Boolean {
-			if(arr1.length != arr2.length) { return false }
-			var len:uint = arr1.length;
-			for(var i:int = 0; i < len; i++) {
-				if(arr1[i] !== arr2[i]) { return false }
-			}
-			return true;
-		}
 		
-		/* Arrays’ order does matter. */
-		public static function equalTree(arr1:Array, arr2:Array):Boolean {
-			if(arr1.length != arr2.length) { return false }
-			var len:uint = arr1.length;
-			for(var i:int = 0; i < len; i++) {
-				if((arr1[i] is Array) && (arr2[i] is Array)) {
-					if(!arguments.callee(arr1[i], arr2[i])) { return false }
-				} else {
-					if(arr1[i] !== arr2[i]) { return false }
+		
+		
+		
+		//---------------------------------------
+		// equality
+		//---------------------------------------
+		///// Array’s order does matter.
+		static public function equal(a:Array, b:Array):Boolean {
+			if (a.length !== b.length) {
+				return false;
+			}
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i] !== b[i]) {
+					return false;
 				}
 			}
 			return true;
 		}
-		
-		/* Array’s order doesn’t matter. */
-		public static function same(arr1:Array, arr2:Array):Boolean {
-			if(arr1.length != arr2.length) { return false }
-			var len:uint = arr1.length;
-			var a2:Array = Arr.copy(arr2);
-			var index:int;
-			for(var i:int = 0; i < len; i++) {
-				index = a2.indexOf(arr1[i]);
-				if(index == -1) { return false }
-				a2.splice(index, 1);
+		///// Arrays’ order does matter.
+		static public function equalTree(a:Array, b:Array):Boolean {
+			if (a.length !== b.length) {
+				return false;
+			}
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i] !== b[i]) {
+					if (a[i] is Array && b[i] is Array) {
+						if (!equalTree(a[i], b[i])) {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
 			}
 			return true;
 		}
-		
-		/* Arrays’ order doesn’t matter. */
-		public static function sameTree(arr1:Array, arr2:Array):Boolean {
-			if(arr1.length != arr2.length) { return false }
-			var len:uint = arr1.length;
-			var a2:Array = Arr.copy(arr2);
-			var index:uint;
-			for(var i:int = 0; i < len; i++) {
-				if(arr1[i] is Array) {
-					var hasSame:Boolean = false;
-					for(var j:int = 0; j < a2.length; j++) {
-						if(a2[j] is Array) {
-							if(arguments.callee(arr1[i], a2[j])) {
-								hasSame = true;
-								a2.splice(j, 1);
+		///// Array’s order doesn’t matter.
+		static public function same(a:Array, b:Array):Boolean {
+			if (a.length !== b.length) {
+				return false;
+			}
+			
+			b = b.concat();
+			var i:int;
+			
+			for each (var value:* in a) {
+				i = b.indexOf(value);
+				
+				if (i < 0) {
+					return false;
+				} else {
+					b.splice(i, 1);
+				}
+			}
+			
+			return true;
+		}
+		///// Arrays’ order doesn’t matter.
+		static public function sameTree(a:Array, b:Array):Boolean {
+			if (a.length !== b.length) {
+				return false;
+			}
+			
+			b = b.concat();
+			var i:int;
+			var value2:*;
+			var cont:Boolean;
+			
+			for each (var value:* in a) {
+				if (value is Array) {
+					cont = false;
+					
+					for each (value2 in b) {
+						if (value2 is Array) {
+							if (sameTree(value, value2)) {
+								b.splice(b.indexOf(value2), 1);
+								cont = true;
 								break;
 							}
 						}
 					}
-					if(!hasSame) { return false }
+					
+					if (!cont) {
+						return false;
+					}
 				} else {
-					index = a2.indexOf(arr1[i]);
-					if(index == -1) { return false }
-					a2.splice(index, 1);
+					i = b.indexOf(value);
+					
+					if (i < 0) {
+						return false;
+					} else {
+						b.splice(i, 1);
+					}
 				}
 			}
+			
 			return true;
 		}
+		
+		
+		
+		
 		
 		public static function member(obj:*, arr:Array):Array {
 			for(var i:uint = 0; i < arr.length; i++) {
@@ -521,10 +649,17 @@ package org.typefest.core {
 			return n;
 		}
 		
-		/* via http://la.ma.la/blog/diary_200608300350.htm */
+		
+		
+		
+		
+		//---------------------------------------
+		// shuffle
+		//---------------------------------------
+		///// via http://la.ma.la/blog/diary_200608300350.htm
 		public static function shuffle(arr:Array):Array {
-			var r:Array = Arr.copy(arr);
-			var i:uint = r.length;
+			var r:Array = arr.concat();
+			var i:uint  = r.length;
 			var j:uint;
 			var t:*;
 			while(i) {
@@ -536,6 +671,13 @@ package org.typefest.core {
 			return r;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// reverse
+		//---------------------------------------
 		public static function reverse(arr:Array):Array {
 			var rArr:Array = [];
 			for(var i:int = arr.length - 1; i >= 0; i--) {
@@ -543,6 +685,10 @@ package org.typefest.core {
 			}
 			return rArr;
 		}
+		
+		
+		
+		
 		
 		public static function remove(obj:*, arr:Array):Array {
 			var r:Array = [];
@@ -558,33 +704,40 @@ package org.typefest.core {
 			return r;
 		}
 		
+		
+		
+		
+		
+		//---------------------------------------
+		// pick
+		//---------------------------------------
 		public static function pick(arr:Array):* {
 			return arr[Math.floor(Math.random() * arr.length)];
 		}
 		
-		public static function unite(...arrs:Array):Array {
-			var dict:Dictionary = new Dictionary();
-			var len:int = arrs.length;
-			var r:Array = [];
-			var arrLen:int;
-			var arr:Array;
-			var elem:*;
-			var i:int;
-			var j:int;
+		
+		
+		
+		
+		//---------------------------------------
+		// set operations
+		//---------------------------------------
+		static public function unite(...aa:Array):Array {
+			var _:Array        = [];
+			var set:Dictionary = new Dictionary();
+			var a:*;
+			var v:*;
 			
-			for(i = 0; i < len; i++) {
-				arr = arrs[i];
-				arrLen = arr.length;
-				for(j = 0; j < arrLen; j++) {
-					elem = arr[j];
-					if(dict[elem] === undefined) {
-						dict[elem] = true;
-						r.push(elem);
+			for each (a in aa) {
+				for each (v in a) {
+					if (!set[v]) {
+						set[v] = true;
+						_.push(v);
 					}
 				}
 			}
 			
-			return r;
+			return _;
 		}
 		
 		public static function subtract(base:Array, sub:Array, unique:Boolean = true):Array {
