@@ -248,35 +248,38 @@ package org.typefest.core {
 		
 		
 		
-		public static function and(arr:Array, ...fns:Array):Array {
-			var rec:Function = function(arr:Array, fns:Array):Array {
-				if(empty(fns) || empty(arr)) {
-					return arr;
-				} else {
-					return arguments.callee(filter(first(fns), arr), rest(fns));
-				}
+		//---------------------------------------
+		// and / or
+		//---------------------------------------
+		static public function and(arr:Array, ...fns:Array):Array {
+			arr = arr.concat();
+			
+			while (fns.length && arr.length) {
+				arr = filter(fns.shift(), arr);
 			}
-			return rec(arr, fns);
+			return arr;
 		}
-		
-		public static function or(arr:Array, ...fns:Array):Array {
-			var rec:Function = function(arr:Array, fns:Array, acc:Array, len:uint):Array {
-				if(Arr.empty(fns) || acc.length == len) {
-					return acc;
-				} else {
-					var fn:Function = Arr.first(fns);
-					var fs:Array = [];
-					var val:*;
-
-					for(var i:int = 0; i < arr.length; i++) {
-						val = arr[i];
-						(fn(val) ? acc : fs).push(val);
+		static public function or(arr:Array, ...fns:Array):Array {
+			var _:Array = [];
+			var value:*;
+			var fn:Function;
+			var some:Boolean;
+			
+			for each (value in arr) {
+				some = false;
+				
+				for each (fn in fns) {
+					if (fn(value)) {
+						some = true;
+						break;
 					}
-
-					return arguments.callee(fs, Arr.rest(fns), acc, len);
+				}
+				if (some) {
+					_.push(value);
 				}
 			}
-			return rec(arr, fns, [], arr.length);
+			
+			return _;
 		}
 		
 		
@@ -739,138 +742,59 @@ package org.typefest.core {
 			
 			return _;
 		}
-		
-		public static function subtract(base:Array, sub:Array, unique:Boolean = true):Array {
-			var subDict:Dictionary = new Dictionary();
-			var elem:*;
+		static public function subtract(a:Array, b:Array, unique:Boolean = true):Array {
+			var _:Array         = [];
+			var subs:Dictionary = new Dictionary();
+			var value:*;
 			
-			for each(elem in sub) {
-				subDict[elem] = true;
+			for each (value in b) {
+				subs[value] = true;
 			}
-			
-			var r:Array = [];
-			var len:int = base.length;
-			var i:int;
-			
-			if(unique) {
-				var rDict:Dictionary = new Dictionary();
-				
-				for(i = 0; i < len; i++) {
-					elem = base[i];
-					
-					if(subDict[elem] === undefined && rDict[elem] === undefined) {
-						r.push(elem);
-						rDict[elem] = true;
+			for each (value in a) {
+				if (!subs[value]) {
+					if (unique) {
+						subs[value] = true;
 					}
-				}
-			} else {
-				for(i = 0; i < len; i++) {
-					elem = base[i];
-					
-					if(subDict[elem] === undefined) {
-						r.push(elem);
-					}
+					_.push(value);
 				}
 			}
 			
-			return r;
+			return _;
 		}
-		
-		public static function _intersect(...arrs:Array):Array {
+		static public function intersect(...aa:Array):Array {
+			var d1:Dictionary = new Dictionary();
+			var d2:Dictionary;
+			var a:*;
+			var v:*;
 			
-			if(arrs.length == 0) {
-				return [];
-			} else if(arrs.length == 1) {
-				return Arr.copy(Arr.first(arrs));
+			a = aa.shift();
+			
+			for each (v in a) {
+				d1[v] = true;
 			}
 			
-			var $intersect:Function = function(first:Array, second:Array):Array {
-				var firstDict:Dictionary  = new Dictionary();
-				var secondDict:Dictionary = new Dictionary();
-				var result:Array          = [];
-				var val:*;
-				var i:int;
+			for each (a in aa) {
+				d2 = new Dictionary();
 				
-				for(i = 0; i < first.length; i++) {
-					firstDict[first[i]] = true;
-				}
-				
-				for(i = 0; i < second.length; i++) {
-					val = second[i];
-					if(firstDict[val] !== undefined && secondDict[val] === undefined) {
-						secondDict[val] = true;
-						result.push(val);
+				for each (v in a) {
+					if (d1[v]) {
+						d2[v] = true;
 					}
 				}
 				
-				return result;
+				d1 = d2;
 			}
 			
-			var rec:Function = function(first:Array, rest:Array):Array {
-				if(Arr.empty(rest)) {
-					return first;
-				} else {
-					var second:Array = Arr.first(rest);
-					return arguments.callee($intersect(first, second), Arr.rest(rest));
-				}
+			var _:Array = [];
+			
+			for (v in d1) {
+				_.push(v);
 			}
 			
-			return rec(Arr.first(arrs), Arr.rest(arrs));
+			return _;
 		}
-		
-		public static function intersect(...arrs:Array):Array {
-			
-			var len:int = arrs.length;
-			
-			if(len == 0) {
-				return [];
-			} else if(len == 1) {
-				return Arr.copy(Arr.first(arrs));
-			}
-			
-			var dict:Dictionary = new Dictionary();
-			var result:Array = [];
-			var arrDict:Dictionary;
-			var arr:Array = arrs[0];
-			var elem:*;
-			var i:int;
-			var j:int;
-			
-			for(i = 0; i < arr.length; i++) {
-				dict[arr[i]] = 1;
-			}
-			
-			for(i = 1; i < len - 1; i++) {
-				arr = arrs[i];
-				arrDict = new Dictionary();
-				for(j = 0; j < arr.length; j++) {
-					elem = arr[j];
-					if(dict[elem] !== undefined && arrDict[elem] === undefined) {
-						arrDict[elem] = true;
-						dict[elem]++;
-					}
-				}
-			}
-			
-			arr = arrs[len - 1];
-			arrDict = new Dictionary();
-			for(i = 0; i < arr.length; i++) {
-				elem = arr[i];
-				if(dict[elem] !== undefined && arrDict[elem] === undefined) {
-					arrDict[elem] = true;
-					dict[elem]++;
-					if(dict[elem] == len) {
-						result.push(elem);
-					}
-				}
-			}
-			
-			return result;
-			
-		}
-		
-		public static function exclude(arr1:Array, arr2:Array, unique:Boolean = true):Array {
-			return Arr.subtract(arr1.concat(arr2), Arr.intersect(arr1, arr2), unique);
+		public static function exclude(a:Array, b:Array, unique:Boolean = true):Array {
+			return subtract(a.concat(b), intersect(a, b), unique);
 		}
 	}
 }
