@@ -290,8 +290,6 @@ package org.typefest.core {
 			var _:Array = [];
 			var len:int = Math.min.apply(null, select(arrs, "length"));
 			
-			log("Arr.map", len, select(arrs, "length"));
-			
 			for (var i:int = 0; i < len; i++) {
 				_.push(fn.apply(null, select(arrs, i)));
 			}
