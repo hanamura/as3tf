@@ -149,17 +149,19 @@ package org.typefest.core {
 		//---------------------------------------
 		// every / some
 		//---------------------------------------
-		public static function every(fn:Function, arr:Array):Boolean {
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				if(!fn(arr[i])) { return false; }
+		static public function every(fn:Function, a:*):Boolean {
+			for each (var value:* in a) {
+				if (!fn(value)) {
+					return false;
+				}
 			}
 			return true;
 		}
-		public static function some(fn:Function, arr:Array):Boolean {
-			var len:int = arr.length;
-			for(var i:int = 0; i < len; i++) {
-				if(fn(arr[i])) { return true; }
+		static public function some(fn:Function, a:*):Boolean {
+			for each (var value:* in a) {
+				if (fn(value)) {
+					return true;
+				}
 			}
 			return false;
 		}
