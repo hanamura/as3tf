@@ -87,22 +87,18 @@ package org.typefest.core {
 		*	var oneToTen:Function = Fn.reserve(Num.pinch, 1, Fn.BLANK, 10);
 		*	oneToTen(20); // returns 10. it equals "Num.pinch(1, 20, 10)"
 		*	*/
-		public static function reserve(fn:Function, ...args1:Array):Function {
-			return function(...opts:Array):* {
-				var args2:Array = [];
-				var i:uint = 0;
-				var o:uint = 0;
-				for(; i < args1.length; i++) {
-					if(args1[i] == Fn.BLANK) {
-						args2.push(opts[o++]);
+		static public function reserve(fn:Function, ...a:Array):Function {
+			return function(...b:Array):* {
+				var c:Array = [];
+				
+				for each (var value:* in a) {
+					if (value === Fn.BLANK) {
+						c.push(b.shift());
 					} else {
-						args2.push(args1[i]);
+						c.push(value);
 					}
 				}
-				for(; o < opts.length; o++) {
-					args2.push(opts[o]);
-				}
-				return fn.apply(this, args2);
+				return fn.apply(this, c.concat(b));
 			}
 		}
 		

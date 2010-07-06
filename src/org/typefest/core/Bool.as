@@ -5,25 +5,18 @@ See LICENSE.txt for full license information.
 
 package org.typefest.core {
 	public class Bool {
-		/*
-		*	TODOs
-		*	
-		*	*/
-		
-		public static function and(...args:Array):Boolean {
-			var len:int = args.length;
-			for(var i:int = 0; i < len; i++) {
-				if(!args[i]) {
+		static public function and(...args:Array):Boolean {
+			for each (var value:* in args) {
+				if (!value) {
 					return false;
 				}
 			}
 			return true;
 		}
 		
-		public static function or(...args:Array):Boolean {
-			var len:int = args.length;
-			for(var i:int = 0; i < len; i++) {
-				if(args[i]) {
+		static public function or(...args:Array):Boolean {
+			for each (var value:* in args) {
+				if (value) {
 					return true;
 				}
 			}
