@@ -106,6 +106,11 @@ package org.typefest.events {
 		
 		static public const LAUNCH:String     = "AltEvent.LAUNCH";
 		
+		static public const LOCK:String       = "AltEvent.LOCK";
+		static public const UNLOCK:String     = "AltEvent.UNLOCK";
+		
+		static public const READY:String      = "AltEvent.READY";
+		
 		
 		
 		

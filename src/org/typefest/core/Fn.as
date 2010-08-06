@@ -26,15 +26,14 @@ package org.typefest.core {
 			}
 		}
 		
-		public static function limit(count:uint, fn:Function):Function {
-			var l:int = count;
-			(l == 0) && (fn = null);
+		static public function limit(count:int, f:Function):Function {
 			return function(...args:Array):* {
-				var r:*;
-				r = (l > 0) ? fn.apply(this, args) : Fn.EXPIRED;
-				(l > -1) && l--;
-				(l == 0) && (fn = null);
-				return r;
+				if (count-- > 0) {
+					return f.apply(null, args);
+				} else {
+					f &&= null;
+					return Fn.EXPIRED;
+				}
 			}
 		}
 		
@@ -49,16 +48,14 @@ package org.typefest.core {
 		*	
 		*	fn(argument); // is same as c(b(a(argument)))
 		*	*/
-		public static function compose(...fns:Array):Function {
-			var rec:Function = function(fns:Array, arg:*):* {
-				if(Arr.empty(fns)) {
-					return arg;
-				} else {
-					return arguments.callee(Arr.rest(fns), Arr.first(fns).call(this, arg));
-				}
-			}
+		static public function compose(...fs:Array):Function {
 			return function(...args:Array):* {
-				return rec(Arr.rest(fns), Arr.first(fns).apply(this, args));
+				var f:Array = fs.concat();
+				
+				while (f.length) {
+					args = [f.shift().apply(null, args)];
+				}
+				return args[0];
 			}
 		}
 		

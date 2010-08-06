@@ -60,7 +60,7 @@ package org.typefest.core {
 		//---------------------------------------
 		// assign
 		//---------------------------------------
-		destructive static function assign(object:*, key:String, value:*):void {
+		destructive static function assign(object:*, key:*, value:*):void {
 			object[key] = value;
 		}
 		

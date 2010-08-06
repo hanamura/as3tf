@@ -55,31 +55,27 @@ package org.typefest.core {
 		}
 		
 		public static function most(arr:Array):Array {
-			return arr.slice(0, arr.length - 1);
+			return arr.slice(0, -1);
 		}
 		
 		public static function last(arr:Array):* {
 			return arr[arr.length - 1];
 		}
 		
-		public static function append(...arrs:Array):Array {
-			var r:Array = [];
-			for(var i:int = 0; i < arrs.length; i++) {
-				r.push.apply(null, arrs[i]);
-			}
-			return r;
+		static public function append(...arrs:Array):Array {
+			return [].concat.apply(null, arrs);
 		}
 		
-		public static function push(arr:Array, v:*):Array {
-			var r:Array = Arr.copy(arr);
-			r.push(v);
-			return r;
+		static public function push(arr:Array, value:*):Array {
+			arr = arr.concat();
+			arr.push(value);
+			return arr;
 		}
 		
-		public static function unshift(v:*, arr:Array):Array {
-			var r:Array = Arr.copy(arr);
-			r.unshift(v);
-			return r;
+		static public function unshift(arr:Array, value:*):Array {
+			arr = arr.concat();
+			arr.unshift(value);
+			return arr;
 		}
 		
 		public static function copy(arr:Array):Array {
@@ -140,6 +136,30 @@ package org.typefest.core {
 			} while((from += step) < to);
 			
 			return r;
+		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// fill
+		//---------------------------------------
+		static public function fill(length:int, data:* = null):Array {
+			var _:Array = [];
+			
+			while (_.length < length) {
+				_.push(data);
+			}
+			return _;
+		}
+		static public function jam(length:int, fn:Function):Array {
+			var _:Array = [];
+			
+			while (_.length < length) {
+				_.push(fn());
+			}
+			return _;
 		}
 		
 		
@@ -683,30 +703,28 @@ package org.typefest.core {
 		//---------------------------------------
 		// reverse
 		//---------------------------------------
-		public static function reverse(arr:Array):Array {
-			var rArr:Array = [];
-			for(var i:int = arr.length - 1; i >= 0; i--) {
-				rArr.push(arr[i]);
+		static public function reverse(a:*):Array {
+			var _:Array = [];
+			
+			for each (var value:* in a) {
+				_.unshift(value);
 			}
-			return rArr;
+			return _;
 		}
 		
 		
 		
 		
 		
-		public static function remove(obj:*, arr:Array):Array {
-			var r:Array = [];
-			var len:int = arr.length;
-			var data:*;
+		static public function remove(object:*, a:*):Array {
+			var _:Array = [];
 			
-			for(var i:int = 0; i < len; i++) {
-				data = arr[i];
-				
-				(data !== obj) && r.push(data);
+			for each (var value:* in a) {
+				if (value !== object) {
+					_.push(value);
+				}
 			}
-			
-			return r;
+			return _;
 		}
 		
 		
