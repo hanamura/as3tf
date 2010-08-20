@@ -5,19 +5,6 @@ See LICENSE.txt for full license information.
 
 package org.typefest.utils {
 	public class Col {
-		
-		// public static function hexToRGB(hex:String):int {
-		// 	var ext:RegExp = /^#?([0-9a-f]{6})$/i;
-		// 	
-		// 	var $:* = ext.exec(hex);
-		// 	
-		// 	if($) {
-		// 		return parseInt("0x" + $[1]);
-		// 	} else {
-		// 		return 0x000000;
-		// 	}
-		// }
-		
 		public static function splitRGB(color:uint):Array {
 			return [color >> 16, (color >> 8) % 256, color % 256];
 		}
