@@ -111,6 +111,9 @@ package org.typefest.events {
 		
 		static public const READY:String      = "AltEvent.READY";
 		
+		static public const STATE:String      = "AltEvent.STATE";
+		static public const STATUS:String     = "AltEvent.STATUS";
+		
 		
 		
 		
