@@ -68,8 +68,6 @@ package org.typefest.time.lazy {
 		// add / remove / has / clear
 		//---------------------------------------
 		public function add(f:Function, time:*):void {
-			log("Lazy.add", f, time, f in _frames, f in _seconds);
-			
 			///// remove
 			this.remove(f);
 			
@@ -92,13 +90,11 @@ package org.typefest.time.lazy {
 		public function remove(f:Function):void {
 			if (f in _frames) {
 				delete _frames[f];
-				return;
-			}
-			if (f in _seconds) {
+			} else if (f in _seconds) {
 				delete _seconds[f];
-				return;
+			} else {
+				_execs.remove(f);
 			}
-			_execs.remove(f);
 		}
 		public function has(f:Function):Boolean {
 			return f in _frames || f in _seconds || _execs.has(f);
