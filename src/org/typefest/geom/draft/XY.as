@@ -284,8 +284,10 @@ package org.typefest.geom.draft {
 			for each (var point:Point in points) {
 				_.offset(point.x, point.y);
 			}
-			_.x /= points.length;
-			_.y /= points.length;
+			if (points.length) {
+				_.x /= points.length;
+				_.y /= points.length;
+			}
 			
 			return _;
 		}
