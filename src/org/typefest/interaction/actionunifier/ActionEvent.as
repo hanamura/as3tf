@@ -14,11 +14,14 @@ package org.typefest.interaction.actionunifier {
 	
 	public class ActionEvent extends MouseEvent {
 		///// types
-		static public const DOWN:String  = "ActionEvent.DOWN";
-		static public const UP:String    = "ActionEvent.UP";
-		static public const OVER:String  = "ActionEvent.OVER";
-		static public const OUT:String   = "ActionEvent.OUT";
-		static public const CLICK:String = "ActionEvent.CLICK";
+		static public const DOWN:String      = "ActionEvent.DOWN";
+		static public const UP:String        = "ActionEvent.UP";
+		static public const OVER:String      = "ActionEvent.OVER";
+		static public const OUT:String       = "ActionEvent.OUT";
+		static public const ROLL_OVER:String = "ActionEvent.ROLL_OVER";
+		static public const ROLL_OUT:String  = "ActionEvent.ROLL_OUT";
+		static public const MOVE:String      = "ActionEvent.MOVE";
+		static public const CLICK:String     = "ActionEvent.CLICK";
 		
 		
 		

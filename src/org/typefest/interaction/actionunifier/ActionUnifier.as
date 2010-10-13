@@ -12,6 +12,7 @@ package org.typefest.interaction.actionunifier {
 	import flash.ui.Multitouch;
 	
 	import org.typefest.data.AEvent;
+	import org.typefest.data.ASet;
 	import org.typefest.data.ASetChange;
 	import org.typefest.display.DocumentScanner;
 	
@@ -40,11 +41,21 @@ package org.typefest.interaction.actionunifier {
 		
 		
 		///// types
-		protected var _downType:String  = null;
-		protected var _upType:String    = null;
-		protected var _overType:String  = null;
-		protected var _outType:String   = null;
-		protected var _clickType:String = null;
+		protected var _downType:String     = null;
+		protected var _upType:String       = null;
+		protected var _overType:String     = null;
+		protected var _outType:String      = null;
+		protected var _rollOverType:String = null;
+		protected var _rollOutType:String  = null;
+		protected var _moveType:String     = null;
+		protected var _clickType:String    = null;
+		
+		
+		
+		///// availables
+		protected var _availables:ASet = null;
+		
+		public function get availables():ASet { return _availables }
 		
 		
 		
@@ -68,6 +79,18 @@ package org.typefest.interaction.actionunifier {
 		//---------------------------------------
 		override protected function _init():void {
 			addEventListener(AEvent.CHANGE, _change);
+			
+			_availables = new ASet([
+				ActionEvent.DOWN,
+				ActionEvent.UP,
+				ActionEvent.OVER,
+				ActionEvent.OUT,
+				ActionEvent.ROLL_OVER,
+				ActionEvent.ROLL_OUT,
+				ActionEvent.MOVE,
+				ActionEvent.CLICK
+			]);
+			_availables.addEventListener(Event.CHANGE, _availablesChange);
 			
 			super._init();
 		}
@@ -102,43 +125,52 @@ package org.typefest.interaction.actionunifier {
 				///// remove
 				for each (o in this) {
 					io = o as InteractiveObject;
-					
-					if (io) {
-						io.removeEventListener(_downType,  _dispatchDown,  false);
-						io.removeEventListener(_upType,    _dispatchUp,    false);
-						io.removeEventListener(_overType,  _dispatchOver,  false);
-						io.removeEventListener(_outType,   _dispatchOut,   false);
-						io.removeEventListener(_clickType, _dispatchClick, false);
-					}
+					io && _unlistenIO(io);
 				}
 				
 				///// types
 				if (mode === ActionMode.TOUCH) {
-					_downType  = TouchEvent.TOUCH_BEGIN;
-					_upType    = TouchEvent.TOUCH_END;
-					_overType  = TouchEvent.TOUCH_ROLL_OVER;
-					_outType   = TouchEvent.TOUCH_ROLL_OUT;
-					_clickType = TouchEvent.TOUCH_TAP;
+					_downType     = TouchEvent.TOUCH_BEGIN;
+					_upType       = TouchEvent.TOUCH_END;
+					_overType     = TouchEvent.TOUCH_OVER;
+					_outType      = TouchEvent.TOUCH_OUT;
+					_rollOverType = TouchEvent.TOUCH_ROLL_OVER;
+					_rollOutType  = TouchEvent.TOUCH_ROLL_OUT;
+					_moveType     = TouchEvent.TOUCH_MOVE;
+					_clickType    = TouchEvent.TOUCH_TAP;
 				} else if (mode === ActionMode.MOUSE) {
-					_downType  = MouseEvent.MOUSE_DOWN;
-					_upType    = MouseEvent.MOUSE_UP;
-					_overType  = MouseEvent.ROLL_OVER;
-					_outType   = MouseEvent.ROLL_OUT;
-					_clickType = MouseEvent.CLICK;
+					_downType     = MouseEvent.MOUSE_DOWN;
+					_upType       = MouseEvent.MOUSE_UP;
+					_overType     = MouseEvent.MOUSE_OVER;
+					_outType      = MouseEvent.MOUSE_OUT;
+					_rollOverType = MouseEvent.ROLL_OVER;
+					_rollOutType  = MouseEvent.ROLL_OUT;
+					_moveType     = MouseEvent.MOUSE_MOVE;
+					_clickType    = MouseEvent.CLICK;
 				}
 				
 				///// add
 				for each (o in this) {
 					io = o as InteractiveObject;
-					
-					if (io) {
-						io.addEventListener(_downType,  _dispatchDown,  false, 0, true);
-						io.addEventListener(_upType,    _dispatchUp,    false, 0, true);
-						io.addEventListener(_overType,  _dispatchOver,  false, 0, true);
-						io.addEventListener(_outType,   _dispatchOut,   false, 0, true);
-						io.addEventListener(_clickType, _dispatchClick, false, 0, true);
-					}
+					io && _listenIO(io);
 				}
+			}
+		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// update availability
+		//---------------------------------------
+		protected function _availablesChange(e:AEvent):void {
+			var io:InteractiveObject;
+			
+			for each (var o:DisplayObject in this) {
+				io = o as InteractiveObject;
+				io && _unlistenIO(io);
+				io && _listenIO(io);
 			}
 		}
 		
@@ -156,26 +188,40 @@ package org.typefest.interaction.actionunifier {
 			
 			for each (o in change.adds) {
 				io = o as InteractiveObject;
-				
-				if (io) {
-					io.addEventListener(_downType,  _dispatchDown,  false, 0, true);
-					io.addEventListener(_upType,    _dispatchUp,    false, 0, true);
-					io.addEventListener(_overType,  _dispatchOver,  false, 0, true);
-					io.addEventListener(_outType,   _dispatchOut,   false, 0, true);
-					io.addEventListener(_clickType, _dispatchClick, false, 0, true);
-				}
+				io && _listenIO(io);
 			}
 			for each (o in change.removes) {
 				io = o as InteractiveObject;
-				
-				if (io) {
-					io.removeEventListener(_downType,  _dispatchDown,  false);
-					io.removeEventListener(_upType,    _dispatchUp,    false);
-					io.removeEventListener(_overType,  _dispatchOver,  false);
-					io.removeEventListener(_outType,   _dispatchOut,   false);
-					io.removeEventListener(_clickType, _dispatchClick, false);
-				}
+				io && _unlistenIO(io);
 			}
+		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// listen / unlisten
+		//---------------------------------------
+		protected function _listenIO(io:InteractiveObject):void {
+			_availables.has(ActionEvent.DOWN)      && io.addEventListener(_downType,     _fireDown,     false, 0, true);
+			_availables.has(ActionEvent.UP)        && io.addEventListener(_upType,       _fireUp,       false, 0, true);
+			_availables.has(ActionEvent.OVER)      && io.addEventListener(_overType,     _fireOver,     false, 0, true);
+			_availables.has(ActionEvent.OUT)       && io.addEventListener(_outType,      _fireOut,      false, 0, true);
+			_availables.has(ActionEvent.ROLL_OVER) && io.addEventListener(_rollOverType, _fireRollOver, false, 0, true);
+			_availables.has(ActionEvent.ROLL_OUT)  && io.addEventListener(_rollOutType,  _fireRollOut,  false, 0, true);
+			_availables.has(ActionEvent.MOVE)      && io.addEventListener(_moveType,     _fireMove,     false, 0, true);
+			_availables.has(ActionEvent.CLICK)     && io.addEventListener(_clickType,    _fireClick,    false, 0, true);
+		}
+		protected function _unlistenIO(io:InteractiveObject):void {
+			io.removeEventListener(_downType,     _fireDown,     false);
+			io.removeEventListener(_upType,       _fireUp,       false);
+			io.removeEventListener(_overType,     _fireOver,     false);
+			io.removeEventListener(_outType,      _fireOut,      false);
+			io.removeEventListener(_rollOverType, _fireRollOver, false);
+			io.removeEventListener(_rollOutType,  _fireRollOut,  false);
+			io.removeEventListener(_moveType,     _fireMove,     false);
+			io.removeEventListener(_clickType,    _fireClick,    false);
 		}
 		
 		
@@ -185,11 +231,14 @@ package org.typefest.interaction.actionunifier {
 		//---------------------------------------
 		// listeners
 		//---------------------------------------
-		protected function _dispatchDown(e:Event):void { _fire(e, ActionEvent.DOWN) }
-		protected function _dispatchUp(e:Event):void { _fire(e, ActionEvent.UP) }
-		protected function _dispatchOver(e:Event):void { _fire(e, ActionEvent.OVER) }
-		protected function _dispatchOut(e:Event):void { _fire(e, ActionEvent.OUT) }
-		protected function _dispatchClick(e:Event):void { _fire(e, ActionEvent.CLICK) }
+		protected function _fireDown(e:Event):void     { _fire(e, ActionEvent.DOWN) }
+		protected function _fireUp(e:Event):void       { _fire(e, ActionEvent.UP) }
+		protected function _fireOver(e:Event):void     { _fire(e, ActionEvent.OVER) }
+		protected function _fireOut(e:Event):void      { _fire(e, ActionEvent.OUT) }
+		protected function _fireRollOver(e:Event):void { _fire(e, ActionEvent.ROLL_OVER) }
+		protected function _fireRollOut(e:Event):void  { _fire(e, ActionEvent.ROLL_OUT) }
+		protected function _fireMove(e:Event):void     { _fire(e, ActionEvent.MOVE) }
+		protected function _fireClick(e:Event):void    { _fire(e, ActionEvent.CLICK) }
 		
 		
 		
