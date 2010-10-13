@@ -8,6 +8,7 @@ package org.typefest.display {
 	import flash.display.DisplayObjectContainer;
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
+	import flash.utils.Dictionary;
 	
 	import org.typefest.data.ASet;
 	
@@ -16,6 +17,16 @@ package org.typefest.display {
 	
 	
 	public class DocumentScanner extends ASet {
+		///// store
+		static protected var _store:Dictionary = new Dictionary(false);
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// instance
+		//---------------------------------------
 		///// display object
 		protected var _target:DisplayObject = null;
 		
@@ -52,6 +63,16 @@ package org.typefest.display {
 		override public function clear():void {
 			throw new IllegalOperationError();
 		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// retain / release
+		//---------------------------------------
+		public function retain():void { _store[this] = true }
+		public function release():void { delete _store[this] }
 		
 		
 		
