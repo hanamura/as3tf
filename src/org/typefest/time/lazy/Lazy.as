@@ -20,18 +20,11 @@ package org.typefest.time.lazy {
 	public class Lazy extends Object {
 		static protected var _lazy:Lazy = new Lazy();
 		
-		static public function add(f:Function, time:*):void {
-			_lazy.add(f, time);
-		}
-		static public function remove(f:Function):void {
-			_lazy.remove(f);
-		}
-		static public function has(f:Function):Boolean {
-			return _lazy.has(f);
-		}
-		static public function clear():void {
-			_lazy.clear();
-		}
+		static public function get lazy():Lazy { return _lazy }
+		static public function add(f:Function, time:*):void { _lazy.add(f, time) }
+		static public function remove(f:Function):void { _lazy.remove(f) }
+		static public function has(f:Function):Boolean { return _lazy.has(f) }
+		static public function clear():void { _lazy.clear() }
 		
 		
 		
