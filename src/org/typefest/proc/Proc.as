@@ -22,7 +22,7 @@ package org.typefest.proc {
 	
 	import flash.utils.getQualifiedClassName;
 	
-	import org.typefest.time.draft.Delay;
+	import org.typefest.time.lazy.Lazy;
 	
 	dynamic public class Proc extends Proxy implements IEventDispatcher {
 		static public const NEW:String        = "new";
@@ -44,7 +44,7 @@ package org.typefest.proc {
 			return proc in __procs;
 		}
 		
-		static protected var _delay:Delay = new Delay();
+		static protected var _delay:Lazy = new Lazy();
 		
 		//---------------------------------------
 		// Instance
