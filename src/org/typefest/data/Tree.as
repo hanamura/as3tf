@@ -54,14 +54,38 @@ package org.typefest.data {
 		
 		*/
 		
-		protected var _weakKeys:Boolean = false;
-		protected var _node:Node        = null;
 		
+		
+		///// alt boolean
+		static private const TRUE:Object  = {};
+		static private const FALSE:Object = {};
+		static private function filter(key:*):* {
+			return (key is Boolean) ? (key ? TRUE : FALSE) : key;
+		}
+		static private function unfilter(key:*):* {
+			return (key === TRUE) ? true : (key === FALSE) ? false : key;
+		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// instance
+		//---------------------------------------
+		///// weakkeys
+		protected var _weakKeys:Boolean = false;
+		
+		///// node
+		protected var _node:Node = null;
+		
+		///// temporary array for for-loop
 		protected var _values:Array = null;
 		
-		public function get length():int {
-			return _count(_node);
-		}
+		
+		
+		///// length
+		public function get length():int { return _count(_node) }
 		protected function _count(node:Node):int {
 			var count:int = node.has() ? 1 : 0;
 			
@@ -71,6 +95,10 @@ package org.typefest.data {
 			return count;
 		}
 		
+		
+		
+		
+		
 		//---------------------------------------
 		// constructor
 		//---------------------------------------
@@ -78,6 +106,10 @@ package org.typefest.data {
 			_weakKeys = weakKeys;
 			_node     = new Node(weakKeys);
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// set / get / del / clear
@@ -89,7 +121,7 @@ package org.typefest.data {
 			var key:*;
 			
 			while (keys.length) {
-				key = keys.shift();
+				key  = filter(keys.shift());
 				node = node[key] ||= new Node(_weakKeys);
 			}
 			node.set(value);
@@ -119,13 +151,17 @@ package org.typefest.data {
 			
 			try {
 				while (keys.length) {
-					node = node[keys.shift()];
+					node = node[filter(keys.shift())];
 				}
 			} catch (e:Error) {
 				return null;
 			}
 			return node;
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// to array
@@ -142,6 +178,10 @@ package org.typefest.data {
 			}
 			return values;
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// proxy
@@ -160,6 +200,10 @@ package org.typefest.data {
 			return _values[index - 1];
 		}
 		
+		
+		
+		
+		
 		//---------------------------------------
 		// iteration
 		//---------------------------------------
@@ -171,9 +215,13 @@ package org.typefest.data {
 				fn(keys, node.get());
 			}
 			for (var key:* in node) {
-				_each(keys.concat([key]), node[key], fn);
+				_each(keys.concat([unfilter(key)]), node[key], fn);
 			}
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// dump
@@ -201,6 +249,10 @@ package org.typefest.data {
 		}
 	}
 }
+
+
+
+
 
 //---------------------------------------
 // node
