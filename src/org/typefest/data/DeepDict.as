@@ -56,23 +56,8 @@ package org.typefest.data {
 		
 		
 		
-		///// alt boolean
-		static private const TRUE:Object  = {};
-		static private const FALSE:Object = {};
-		static private function filter(key:*):* {
-			return (key is Boolean) ? (key ? TRUE : FALSE) : key;
-		}
-		static private function unfilter(key:*):* {
-			return (key === TRUE) ? true : (key === FALSE) ? false : key;
-		}
 		
 		
-		
-		
-		
-		//---------------------------------------
-		// instance
-		//---------------------------------------
 		///// weakkeys
 		protected var _weakKeys:Boolean = false;
 		
@@ -121,7 +106,7 @@ package org.typefest.data {
 			var key:*;
 			
 			while (keys.length) {
-				key  = filter(keys.shift());
+				key  = B.wrap(keys.shift());
 				node = node[key] ||= new Node(_weakKeys);
 			}
 			node.set(value);
@@ -151,7 +136,7 @@ package org.typefest.data {
 			
 			try {
 				while (keys.length) {
-					node = node[filter(keys.shift())];
+					node = node[B.wrap(keys.shift())];
 				}
 			} catch (e:Error) {
 				return null;
@@ -215,7 +200,7 @@ package org.typefest.data {
 				fn(keys, node.get());
 			}
 			for (var key:* in node) {
-				_each(keys.concat([unfilter(key)]), node[key], fn);
+				_each(keys.concat([B.unwrap(key)]), node[key], fn);
 			}
 		}
 		

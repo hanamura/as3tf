@@ -13,23 +13,6 @@ package org.typefest.data {
 	
 	
 	public class TrueDict extends Proxy {
-		///// translation
-		static private const TRUE:*  = {};
-		static private const FALSE:* = {};
-		static private function filter(key:*):* {
-			return (key is Boolean) ? (key ? TRUE : FALSE) : key;
-		}
-		static private function unfilter(key:*):* {
-			return (key === TRUE) ? true : (key === FALSE) ? false : key;
-		}
-		
-		
-		
-		
-		
-		//---------------------------------------
-		// instance
-		//---------------------------------------
 		///// weakkeys
 		protected var _weakKeys:Boolean = false;
 		
@@ -71,16 +54,16 @@ package org.typefest.data {
 		// operations
 		//---------------------------------------
 		public function set(key:*, value:*):void {
-			_dict[filter(key)] = value;
+			_dict[B.wrap(key)] = value;
 		}
 		public function get(key:*):* {
-			return _dict[filter(key)];
+			return _dict[B.wrap(key)];
 		}
 		public function has(key:*):Boolean {
-			return filter(key) in _dict;
+			return B.wrap(key) in _dict;
 		}
 		public function del(key:*):Boolean {
-			return delete _dict[filter(key)];
+			return delete _dict[B.wrap(key)];
 		}
 		public function clear():void {
 			_dict = new Dictionary(_weakKeys);
@@ -112,7 +95,7 @@ package org.typefest.data {
 		//---------------------------------------
 		public function each(fn:Function):void {
 			for (var key:* in _dict) {
-				fn(unfilter(key), _dict[key]);
+				fn(B.unwrap(key), _dict[key]);
 			}
 		}
 		
