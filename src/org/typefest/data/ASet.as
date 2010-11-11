@@ -11,32 +11,36 @@ package org.typefest.data {
 	import flash.utils.flash_proxy;
 	import flash.utils.Proxy;
 	
+	
+	
+	
+	
 	public class ASet extends Proxy implements IA {
+		///// event dispatcher
 		private var __ed:EventDispatcher = null;
 		
 		protected var _d:Dictionary = null;
 		protected var _l:Array      = null;
 		
-		public function get length():uint {
-			return toArray().length;
-		}
 		
-		//---------------------------------------
-		// depth
-		//---------------------------------------
+		
+		///// length
+		public function get length():uint { return toArray().length }
+		
+		
+		
+		///// depth
 		protected var _depth:int = -1;
 		
-		public function get depth():int {
-			return _depth;
-		}
-		public function set depth(num:int):void {
-			if (_depth !== num) {
-				_depth = num;
-			}
-		}
+		public function get depth():int { return _depth }
+		public function set depth(_:int):void { _depth = _ }
+		
+		
+		
+		
 		
 		//---------------------------------------
-		// Constructor
+		// constructor
 		//---------------------------------------
 		public function ASet(init:* = null) {
 			super();
@@ -55,6 +59,10 @@ package org.typefest.data {
 				add.apply(null, values);
 			}
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// operations
@@ -89,7 +97,7 @@ package org.typefest.data {
 			}
 			
 			if (adds.length) {
-				_dispatch(ASetChange.ADD, adds, null);
+				_dispatch(ASetChange.ADD, adds, []);
 			}
 		}
 		public function remove(...values:Array):void {
@@ -116,7 +124,7 @@ package org.typefest.data {
 			}
 			
 			if (removes.length) {
-				_dispatch(ASetChange.REMOVE, null, removes);
+				_dispatch(ASetChange.REMOVE, [], removes);
 			}
 		}
 		public function has(value:*):Boolean {
@@ -138,9 +146,13 @@ package org.typefest.data {
 			_d = new Dictionary();
 			
 			if (removes.length) {
-				_dispatch(ASetChange.REMOVE, null, removes);
+				_dispatch(ASetChange.REMOVE, [], removes);
 			}
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// shortcut
@@ -155,6 +167,10 @@ package org.typefest.data {
 			));
 		}
 		
+		
+		
+		
+		
 		//---------------------------------------
 		// listener
 		//---------------------------------------
@@ -164,28 +180,36 @@ package org.typefest.data {
 			}
 		}
 		
+		
+		
+		
+		
 		//---------------------------------------
 		// to string
 		//---------------------------------------
 		public function toString():String {
 			return "";
 		}
-		
 		public function toArray():Array {
 			var _:Array = [];
+			
 			for (var key:* in _d) {
 				_.push(key);
 			}
 			return _;
 		}
-		
 		public function toDict(weakKeys:Boolean = false):Dictionary {
 			var _:Dictionary = new Dictionary(weakKeys);
+			
 			for (var key:* in _d) {
 				_[key] = true;
 			}
 			return _;
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// proxy
@@ -207,6 +231,10 @@ package org.typefest.data {
 		override flash_proxy function nextValue(index:int):* {
 			return _l[index - 1];
 		}
+		
+		
+		
+		
 		
 		//---------------------------------------
 		// event dispatcher

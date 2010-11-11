@@ -11,12 +11,8 @@ package org.typefest.data {
 		protected var _adds:Array    = null;
 		protected var _removes:Array = null;
 
-		public function get adds():Array {
-			return _adds && _adds.concat();
-		}
-		public function get removes():Array {
-			return _removes && _removes.concat();
-		}
+		public function get adds():Array { return _adds && _adds.concat() }
+		public function get removes():Array { return _removes && _removes.concat() }
 		
 		public function ASetChange(type:String, adds:Array, removes:Array) {
 			super(type);
