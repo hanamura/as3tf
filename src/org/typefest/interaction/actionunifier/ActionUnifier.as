@@ -10,6 +10,7 @@ package org.typefest.interaction.actionunifier {
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
 	
 	import org.typefest.data.AEvent;
 	import org.typefest.data.ASet;
@@ -153,6 +154,13 @@ package org.typefest.interaction.actionunifier {
 				for each (o in this) {
 					io = o as InteractiveObject;
 					io && _listenIO(io);
+				}
+				
+				///// Multitouch.inputMode
+				if (mode === ActionMode.TOUCH) {
+					Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+				} else if (mode === ActionMode.MOUSE) {
+					Multitouch.inputMode = MultitouchInputMode.NONE;
 				}
 			}
 		}
