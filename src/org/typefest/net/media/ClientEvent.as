@@ -2,6 +2,7 @@
 Copyright (c) 2010 Taro Hanamura
 See LICENSE.txt for full license information.
 */
+
 package org.typefest.net.media {
 	import flash.events.Event;
 	import flash.utils.ByteArray;
