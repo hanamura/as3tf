@@ -18,7 +18,7 @@ package org.typefest.data {
 				return TRUE;
 			} else if (_ === false) {
 				return FALSE;
-			} else if (isNaN(_)) {
+			} else if (_ is Number && isNaN(_)) {
 				return NAN;
 			} else if (_ === null) {
 				return NULL;
