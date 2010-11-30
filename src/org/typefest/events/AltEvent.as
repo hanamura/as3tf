@@ -53,66 +53,70 @@ package org.typefest.events {
 		static public const USER_PRESENT:String        = "AltEvent.USER_PRESENT";
 		
 		///// AltEvent original types
-		static public const UPDATE:String     = "AltEvent.UPDATE";
+		static public const UPDATE:String      = "AltEvent.UPDATE";
 		
-		static public const START:String      = "AltEvent.START";
-		static public const END:String        = "AltEvent.END";
+		static public const START:String       = "AltEvent.START";
+		static public const END:String         = "AltEvent.END";
 		
-		static public const PLAY:String       = "AltEvent.PLAY";
-		static public const PAUSE:String      = "AltEvent.PAUSE";
-		static public const RESUME:String     = "AltEvent.RESUME";
-		static public const STOP:String       = "AltEvent.STOP";
-		static public const REWIND:String     = "AltEvent.REWIND";
-		static public const REPLAY:String     = "AltEvent.REPLAY";
+		static public const PLAY:String        = "AltEvent.PLAY";
+		static public const PAUSE:String       = "AltEvent.PAUSE";
+		static public const RESUME:String      = "AltEvent.RESUME";
+		static public const STOP:String        = "AltEvent.STOP";
+		static public const REWIND:String      = "AltEvent.REWIND";
+		static public const REPLAY:String      = "AltEvent.REPLAY";
 		
-		static public const INTERRUPT:String  = "AltEvent.INTERRUPT";
+		static public const INTERRUPT:String   = "AltEvent.INTERRUPT";
 		
-		static public const STEP:String       = "AltEvent.STEP";
-		static public const TICK:String       = "AltEvent.TICK";
-		static public const LOOP:String       = "AltEvent.LOOP";
-		static public const REPEAT:String     = "AltEvent.REPEAT";
-		static public const REPOSITION:String = "AltEvent.REPOSITION";
-		static public const REARRANGE:String  = "AltEvent.REARRANGE";
-		static public const RESCALE:String    = "AltEvent.RESCALE";
+		static public const STEP:String        = "AltEvent.STEP";
+		static public const TICK:String        = "AltEvent.TICK";
+		static public const LOOP:String        = "AltEvent.LOOP";
+		static public const REPEAT:String      = "AltEvent.REPEAT";
+		static public const REPOSITION:String  = "AltEvent.REPOSITION";
+		static public const REARRANGE:String   = "AltEvent.REARRANGE";
+		static public const RESCALE:String     = "AltEvent.RESCALE";
 		
-		static public const SUCCESS:String    = "AltEvent.SUCCESS";
-		static public const FAIL:String       = "AltEvent.FAIL";
+		static public const SUCCESS:String     = "AltEvent.SUCCESS";
+		static public const FAIL:String        = "AltEvent.FAIL";
 		
-		static public const ENTER:String      = "AltEvent.ENTER";
-		static public const EXIT:String       = "AltEvent.EXIT";
+		static public const ENTER:String       = "AltEvent.ENTER";
+		static public const EXIT:String        = "AltEvent.EXIT";
 		
-		static public const FOCUS:String      = "AltEvent.FOCUS";
-		static public const UNFOCUS:String    = "AltEvent.UNFOCUS";
+		static public const FOCUS:String       = "AltEvent.FOCUS";
+		static public const UNFOCUS:String     = "AltEvent.UNFOCUS";
 		
-		static public const BACKWARD:String   = "AltEvent.BACKWARD";
-		static public const FORWARD:String    = "AltEvent.FORWARD";
+		static public const BACKWARD:String    = "AltEvent.BACKWARD";
+		static public const FORWARD:String     = "AltEvent.FORWARD";
 		
-		static public const IN:String         = "AltEvent.IN";
-		static public const OUT:String        = "AltEvent.OUT";
+		static public const IN:String          = "AltEvent.IN";
+		static public const OUT:String         = "AltEvent.OUT";
 		
-		static public const INPUT:String      = "AltEvent.INPUT";
-		static public const OUTPUT:String     = "AltEvent.OUTPUT";
+		static public const INPUT:String       = "AltEvent.INPUT";
+		static public const OUTPUT:String      = "AltEvent.OUTPUT";
 		
-		static public const PREVIEW:String    = "AltEvent.PREVIEW";
+		static public const PREVIEW:String     = "AltEvent.PREVIEW";
 		
-		static public const NEXT:String       = "AltEvent.NEXT";
-		static public const PREV:String       = "AltEvent.PREV";
+		static public const NEXT:String        = "AltEvent.NEXT";
+		static public const PREV:String        = "AltEvent.PREV";
 		
-		static public const ADD:String        = "AltEvent.ADD";
-		static public const REMOVE:String     = "AltEvent.REMOVE";
-		static public const SET:String        = "AltEvent.SET";
-		static public const GET:String        = "AltEvent.GET";
-		static public const DELETE:String     = "AltEvent.DELETE";
+		static public const ADD:String         = "AltEvent.ADD";
+		static public const REMOVE:String      = "AltEvent.REMOVE";
+		static public const SET:String         = "AltEvent.SET";
+		static public const GET:String         = "AltEvent.GET";
+		static public const DELETE:String      = "AltEvent.DELETE";
 		
-		static public const LAUNCH:String     = "AltEvent.LAUNCH";
+		static public const LAUNCH:String      = "AltEvent.LAUNCH";
 		
-		static public const LOCK:String       = "AltEvent.LOCK";
-		static public const UNLOCK:String     = "AltEvent.UNLOCK";
+		static public const LOCK:String        = "AltEvent.LOCK";
+		static public const UNLOCK:String      = "AltEvent.UNLOCK";
 		
-		static public const READY:String      = "AltEvent.READY";
+		static public const READY:String       = "AltEvent.READY";
 		
-		static public const STATE:String      = "AltEvent.STATE";
-		static public const STATUS:String     = "AltEvent.STATUS";
+		static public const STATE:String       = "AltEvent.STATE";
+		static public const STATUS:String      = "AltEvent.STATUS";
+		
+		static public const ALPHA:String       = "AltEvent.ALPHA";
+		static public const VISIBLE:String     = "AltEvent.VISIBLE";
+		static public const INTERACTION:String = "AltEvent.INTERACTION";
 		
 		
 		
@@ -123,9 +127,7 @@ package org.typefest.events {
 		//---------------------------------------
 		protected var _data:* = null;
 		
-		public function get data():* {
-			return _data;
-		}
+		public function get data():* { return _data }
 		
 		
 		
