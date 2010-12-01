@@ -4,7 +4,7 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.display.text {
-	import flash.display.Sprite;
+	import flash.display.DisplayObjectContainer;
 	
 	import flashx.textLayout.elements.TextFlow;
 	
@@ -26,7 +26,7 @@ package org.typefest.display.text {
 		public function set textFlow(_:TextFlow):void { _list.textFlow = _ }
 		
 		///// container
-		protected var _container:Sprite = null;
+		public function get container():DisplayObjectContainer { return this }
 		
 		
 		
@@ -51,9 +51,6 @@ package org.typefest.display.text {
 		// init
 		//---------------------------------------
 		protected function _init():void {
-			_container = new Sprite();
-			addChild(_container);
-			
 			_list.addEventListener(AEvent.CHANGE, _listChange);
 			
 			_onInit();
@@ -70,8 +67,8 @@ package org.typefest.display.text {
 		protected function _listChange(e:AEvent):void {
 			var change:AListChange = e.change as AListChange;
 			
-			Arr.each(_container.addChild, Arr.subtract(change.curr, change.prev));
-			Arr.each(_container.removeChild, Arr.subtract(change.prev, change.curr));
+			Arr.each(container.addChild, Arr.subtract(change.curr, change.prev));
+			Arr.each(container.removeChild, Arr.subtract(change.prev, change.curr));
 		}
 	}
 }
