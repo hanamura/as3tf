@@ -118,6 +118,8 @@ package org.typefest.events {
 		static public const VISIBLE:String     = "AltEvent.VISIBLE";
 		static public const INTERACTION:String = "AltEvent.INTERACTION";
 		
+		static public const LAYOUT:String      = "AltEvent.LAYOUT";
+		
 		
 		
 		

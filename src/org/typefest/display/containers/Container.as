@@ -12,7 +12,7 @@ package org.typefest.display.containers {
 	
 	
 	
-	public class Container extends Sprite {
+	public class Container extends Sprite implements IRepresent {
 		///// size
 		protected var _width:Number  = 0;
 		protected var _height:Number = 0;
