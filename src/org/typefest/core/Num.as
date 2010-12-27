@@ -19,9 +19,13 @@ package org.typefest.core {
 		//---------------------------------------
 		// pinch
 		//---------------------------------------
-		public static function pinch(min:Number, target:Number, max:Number):Number {
+		static public function pinch(a:Number, target:Number, b:Number):Number {
+			var min:Number = a < b ? a : b;
+			var max:Number = a >= b ? a : b;
+			
 			return target < min ? min : target > max ? max : target;
 		}
+		
 		
 		
 		
