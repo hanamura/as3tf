@@ -120,6 +120,8 @@ package org.typefest.events {
 		
 		static public const LAYOUT:String      = "AltEvent.LAYOUT";
 		
+		static public const BITMAP:String      = "AltEvent.BITMAP";
+		
 		
 		
 		
