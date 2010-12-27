@@ -13,7 +13,7 @@ package org.typefest.media {
 	import flash.media.Video;
 	import flash.net.NetConnection;
 	
-	import org.typefest.display.Container;
+	import org.typefest.display.containers.Container;
 	import org.typefest.events.SilentErrorEvent;
 	import org.typefest.layout.Layout;
 	import org.typefest.net.media.EventfulNetConnection;
@@ -449,7 +449,10 @@ package org.typefest.media {
 				_video.smoothing  = _smoothing;
 			}
 		}
-		override protected function _update():void {
+		override protected function _onResize():void {
+			_update();
+		}
+		protected function _update():void {
 			if (_video) {
 				var rect:Rectangle = _contentLayout(
 					new Rectangle(0, 0, _width, _height),
