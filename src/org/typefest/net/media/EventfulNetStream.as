@@ -22,14 +22,12 @@ package org.typefest.net.media {
 		//---------------------------------------
 		protected var _client:Object = null;
 		
-		override public function get client():Object {
-			return _client;
-		}
-		override public function set client(x:Object):void {
-			if (!x) {
+		override public function get client():Object { return _client }
+		override public function set client(_:Object):void {
+			if (!_) {
 				throw new TypeError();
 			}
-			_client = x;
+			_client = _;
 		}
 		
 		//---------------------------------------
