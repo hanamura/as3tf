@@ -17,6 +17,63 @@ package org.typefest.loop {
 	
 	
 	
+	/*
+	
+	///// simple loop
+	var count:int = 0;
+	var loop:Loop = new Loop(function():void {
+		if (count++ < 100) {
+			trace(count);
+		} else {
+			throw new Break();
+		}
+	});
+	loop.start();
+	loop.addEventListener(LoopEvent.END, function(e:LoopEvent):void {
+		trace("the loop ended");
+	});
+	loop.addEventListener(LoopErrorEvent.ERROR, function(e:LoopErrorEvent):void {
+		trace("error occurred during the loop");
+	});
+	
+	
+	
+	///// for / for each
+	var target:* = {"apple":0, "orange":1, "grape":2};
+	var loopFor:Loop = new For(target, function(key:String):void {
+		trace(key, target[key]);
+	});
+	loopFor.start();
+	var loopForEach:Loop = new ForEach(target, function(value:Number):void {
+		trace(value);
+	});
+	loopForEach.start();
+	
+	
+	
+	///// while
+	var count:int = 0;
+	var loopWhile:Loop = new While(
+		function():Boolean { return count++ < 100 },
+		function():void { trace(count) }
+	);
+	loopWhile.start();
+	
+	
+	
+	///// nest
+	var target:* = {"apple":0, "orange":1, "grape":2};
+	var loopFor:Loop = new For(target, function(key:String):void {
+		throw new While(
+			function():Boolean { return Boolean(key) },
+			function():void { key = key.slice(0, -1) },
+			null,
+			10,
+			function():void { trace("called after while loop") }
+		);
+	});
+	
+	*/
 	public class Loop extends EventDispatcher {
 		///// props
 		protected var _body:Function = null;
