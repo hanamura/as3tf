@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010 Taro Hanamura
+Copyright (c) 2011 Taro Hanamura
 See LICENSE.txt for full license information.
 */
 
@@ -245,6 +245,19 @@ package org.typefest.core {
 		
 		public static function sort(arr:Array, compare:Function = null):Array {
 			return arr.concat().sort((compare === null) ? Sort.smaller : compare);
+		}
+		
+		
+		
+		
+		
+		//---------------------------------------
+		// dig
+		//---------------------------------------
+		static public function dig(compare:Function, keys:Array):Function {
+			return function(a:*, b:*):int {
+				return compare(Misc.dig(a, keys), Misc.dig(b, keys));
+			}
 		}
 	}
 }
