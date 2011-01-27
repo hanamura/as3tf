@@ -64,6 +64,7 @@ package org.typefest.events {
 		static public const STOP:String        = "AltEvent.STOP";
 		static public const REWIND:String      = "AltEvent.REWIND";
 		static public const REPLAY:String      = "AltEvent.REPLAY";
+		static public const TOGGLE:String      = "AltEvent.TOGGLE";
 		
 		static public const INTERRUPT:String   = "AltEvent.INTERRUPT";
 		
