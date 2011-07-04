@@ -20,7 +20,7 @@ Main Features
 
 *	**Layout** – sizing and positioning objects in a declarative way
 	
-	See `org.typefest.layout.*`
+	See `org.typefest.display.layout.*`
 
 *	**Event Handling, Asyncronized Procedures** – managing events and asyncronized procedures out of chaos
 	
