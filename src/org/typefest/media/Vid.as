@@ -282,6 +282,7 @@ package org.typefest.media {
 				_connection.connect(null);
 				
 				_stream = new VidNetStream(_connection, this);
+				_stream.bufferTime = 8;
 				_stream.checkPolicyFile = _checkPolicyFile;
 				_stream.play(_request);
 				_stream.pause();
