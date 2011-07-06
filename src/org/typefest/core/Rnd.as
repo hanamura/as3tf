@@ -19,26 +19,15 @@ package org.typefest.core {
 		
 		*/
 		static public function antirepeat(...args:Array):Function {
-			var len:int = args.length;
-			
-			if (len === 1) {
-				var x:* = args[0];
-				args = null;
-				return function():* {
-					return x;
-				}
+			if (args.length <= 1) {
+				return function():* { return args[0] }
 			} else {
-				var _:Function = function():* {
-					var j:int = Math.floor(Math.random() * len);
-					_ = function():* {
-						var i:int = Math.floor(Math.random() * (len - 1));
-						(i >= j) && i++;
-						return args[j = i];
-					}
-					return args[j];
-				}
+				var j:int = int(Math.random() * args.length);
+				
 				return function():* {
-					return _();
+					var i:int = int(Math.random() * (args.length - 1));
+					if (i >= j) { i++ }
+					return args[j = i];
 				}
 			}
 		}
