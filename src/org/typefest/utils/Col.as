@@ -100,7 +100,7 @@ package org.typefest.utils {
 			return [red, green, blue];
 		}
 		
-		public function toColorTransform(color:uint):ColorTransform {
+		static public function toColorTransform(color:uint):ColorTransform {
 			var r:uint = color >> 16
 			var g:uint = (color >> 8) % 256
 			var b:uint = color % 256;
