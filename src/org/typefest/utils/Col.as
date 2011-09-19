@@ -4,6 +4,8 @@ See LICENSE.txt for full license information.
 */
 
 package org.typefest.utils {
+	import flash.geom.ColorTransform;
+	
 	public class Col {
 		public static function splitRGB(color:uint):Array {
 			return [color >> 16, (color >> 8) % 256, color % 256];
@@ -96,6 +98,14 @@ package org.typefest.utils {
 				}
 			}
 			return [red, green, blue];
+		}
+		
+		public function toColorTransform(color:uint):ColorTransform {
+			var r:uint = color >> 16
+			var g:uint = (color >> 8) % 256
+			var b:uint = color % 256;
+			
+			return new ColorTransform(0, 0, 0, 1, r, g, b, 0);
 		}
 	}
 }
