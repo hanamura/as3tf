@@ -115,6 +115,7 @@ package org.typefest.proc {
 		//---------------------------------------
 		public function start():void {
 			if (_phase === ProcPhase.NEW) {
+				_phase = ProcPhase.STARTING;
 				_lazy.add(proxy::_start, "1");
 			} else {
 				throw new IllegalOperationError();
