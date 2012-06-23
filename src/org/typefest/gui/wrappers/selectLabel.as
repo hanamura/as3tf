@@ -44,6 +44,15 @@ package org.typefest.gui.wrappers {
 				list = ["normal"];
 			}
 		}
+
+		if (!mouseEnabled) {
+			var i:int = 0;
+
+			while (i < list.length) {
+				list.splice(i, 0, list[i] + "-");
+				i += 2;
+			}
+		}
 		
 		var set:Set = new Set(labels);
 		var label:*;
