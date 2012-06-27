@@ -9,8 +9,6 @@ package org.typefest.net.loader {
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
 	
-	import org.typefest.core.Arr;
-	
 	
 	
 	
@@ -18,49 +16,33 @@ package org.typefest.net.loader {
 	public class LoadersLoader extends EventDispatcher implements ILoader {
 		///// loaders
 		protected var _loaders:Array = null;
+		protected var _limit:uint = 0;
 		
 		public function get loaders():Array { return _loaders.concat() }
-		
-		
+		public function get limit():uint { return _limit }
 		
 		///// loader
-		protected var _loader:ILoader = null;
-		protected var _queue:Array    = null;
+		protected var _loadeds:Array = [];
+		protected var _loadings:Array = [];
+		protected var _waitings:Array = [];
 		
-		
-		
-		///// loading / loaded
+		///// loading/loaded
 		public function get loading():Boolean {
-			return !!_loader;
+			return !!_loadings.length;
 		}
 		public function get loaded():Boolean {
-			return !_loader && !!_queue && !_queue.length;
+			return _loadeds.length === _loaders.length;
 		}
-		
-		
 		
 		///// data
 		public function get data():* {
-			if (_queue) {
-				var loaders:Array = _loaders.slice(
-					0, (_queue.length + (_loader ? 1 : 0)) * -1
-				);
-				
-				return Arr.select(loaders, "data");
-			} else {
-				return [];
-			}
-			
-			var _:Array = [];
-			
+			var data:Array = [];
+
 			for each (var loader:ILoader in _loaders) {
-				if (loader.loaded) {
-					_.push(loader.data);
-				} else {
-					break;
-				}
+				data.push(loader.data);
 			}
-			return _;
+
+			return data;
 		}
 		
 		
@@ -70,97 +52,101 @@ package org.typefest.net.loader {
 		//---------------------------------------
 		// constructor
 		//---------------------------------------
-		public function LoadersLoader(loaders:Array) {
+		public function LoadersLoader(loaders:Array, limit:uint = 3) {
 			super();
 			
-			_loaders = loaders.concat();
+			_loaders = loaders ? loaders.concat() : [];
+			_limit = limit;
 		}
 		
 		
 		
 		
 		
-		//---------------------------------------
-		// load / unload
-		//---------------------------------------
+		// load
 		public function load():void {
-			if (!loading && !loaded) {
-				_queue = _loaders.concat();
-				_load();
-				
-				dispatchEvent(new Event(Event.OPEN));
+			if (!loaded && !loading) {
+				for each (var loader:ILoader in _loaders) {
+					if (loader.loaded) {
+						_loadeds.push(loader);
+					} else if (loader.loading) {
+						_loadings.push(loader);
+					} else {
+						_waitings.push(loader);
+					}
+				}
+
+				if (_loaders.length) {
+					_load();
+
+					dispatchEvent(new Event(Event.OPEN));
+				} else {
+					dispatchEvent(new Event(Event.OPEN));
+					dispatchEvent(new Event(Event.COMPLETE));
+				}
 			}
 		}
+		// load
 		protected function _load():void {
-			if (_queue.length) {
-				_loader = _queue.shift();
-				_loader.load();
-				_loader.addEventListener(
-					Event.COMPLETE, _loaderComplete
-				);
-				_loader.addEventListener(
-					IOErrorEvent.IO_ERROR, _loaderComplete
-				);
-				_loader.addEventListener(
-					SecurityErrorEvent.SECURITY_ERROR, _loaderComplete
-				);
+			var loader:ILoader;
+
+			while (_loadings.length < _limit && _waitings.length) {
+				loader = _waitings.shift();
+				loader.load();
+				_loadings.push(loader);
+			}
+
+			if (_loadings.length) {
+				for each (loader in _loadings) {
+					loader.addEventListener(Event.COMPLETE, _loaderComplete);
+					loader.addEventListener(IOErrorEvent.IO_ERROR, _loaderComplete);
+					loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderComplete);
+				}
 			} else {
 				dispatchEvent(new Event(Event.COMPLETE));
 			}
 		}
+		// complete
+		protected function _loaderComplete(e:Event):void {
+			var loader:ILoader = e.currentTarget as ILoader;
+
+			loader.removeEventListener(Event.COMPLETE, _loaderComplete);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, _loaderComplete);
+			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderComplete);
+
+			_loadings.splice(_loadings.indexOf(loader), 1);
+			_loadeds.push(loader);
+
+			_load();
+		}
+		// unload
 		public function unload():void {
+			var loader:ILoader;
+
 			if (loading) {
-				_drop();
-				_loader.unload();
-				_loader = null;
+				for each (loader in _loadings) {
+					loader.removeEventListener(Event.COMPLETE, _loaderComplete);
+					loader.removeEventListener(IOErrorEvent.IO_ERROR, _loaderComplete);
+					loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderComplete);
+				}
 			}
-			_queue = null;
-			
+
 			var some:Boolean = false;
-			
-			for each (var loader:ILoader in _loaders) {
+
+			for each (loader in _loaders) {
 				if (loader.loaded) {
 					some = true;
 				}
 				loader.unload();
 			}
-			
+
+			_loadeds = [];
+			_loadings = [];
+			_waitings = [];
+
 			if (some) {
 				dispatchEvent(new Event(Event.UNLOAD));
 			}
-		}
-		
-		
-		
-		
-		
-		//---------------------------------------
-		// drop
-		//---------------------------------------
-		protected function _drop():void {
-			_loader.removeEventListener(
-				Event.COMPLETE, _loaderComplete
-			);
-			_loader.removeEventListener(
-				IOErrorEvent.IO_ERROR, _loaderComplete
-			);
-			_loader.removeEventListener(
-				SecurityErrorEvent.SECURITY_ERROR, _loaderComplete
-			);
-		}
-		
-		
-		
-		
-		
-		//---------------------------------------
-		// complete
-		//---------------------------------------
-		protected function _loaderComplete(e:Event):void {
-			_drop();
-			_loader = null;
-			
-			_load();
 		}
 	}
 }
