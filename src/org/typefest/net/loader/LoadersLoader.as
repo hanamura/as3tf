@@ -121,6 +121,19 @@ package org.typefest.net.loader {
 		}
 		// unload
 		public function unload():void {
+			for each (var loader:ILoader in _loadings) {
+				loader.removeEventListener(Event.COMPLETE, _loaderComplete);
+				loader.removeEventListener(IOErrorEvent.IO_ERROR, _loaderComplete);
+				loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderComplete);
+				loader.unload();
+			}
+
+			_loadeds = [];
+			_loadings = [];
+			_waitings = [];
+		}
+		// unload all
+		public function unloadAll():void {
 			var loader:ILoader;
 
 			if (loading) {
