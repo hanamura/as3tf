@@ -8,6 +8,8 @@ package org.typefest.net.loader {
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
+
+	import org.typefest.events.AltEvent;
 	
 	
 	
@@ -76,7 +78,7 @@ package org.typefest.net.loader {
 					}
 				}
 
-				if (_loaders.length) {
+				if (_loaders.length && (_waitings.length || _loadings.length)) {
 					_load();
 
 					dispatchEvent(new Event(Event.OPEN));
@@ -96,14 +98,10 @@ package org.typefest.net.loader {
 				_loadings.push(loader);
 			}
 
-			if (_loadings.length) {
-				for each (loader in _loadings) {
-					loader.addEventListener(Event.COMPLETE, _loaderComplete);
-					loader.addEventListener(IOErrorEvent.IO_ERROR, _loaderComplete);
-					loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderComplete);
-				}
-			} else {
-				dispatchEvent(new Event(Event.COMPLETE));
+			for each (loader in _loadings) {
+				loader.addEventListener(Event.COMPLETE, _loaderComplete);
+				loader.addEventListener(IOErrorEvent.IO_ERROR, _loaderComplete);
+				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderComplete);
 			}
 		}
 		// complete
@@ -117,7 +115,13 @@ package org.typefest.net.loader {
 			_loadings.splice(_loadings.indexOf(loader), 1);
 			_loadeds.push(loader);
 
-			_load();
+			if (_loadings.length || _waitings.length) {
+				_load();
+				dispatchEvent(new AltEvent(AltEvent.STEP, false, false, loader));
+			} else {
+				dispatchEvent(new AltEvent(AltEvent.STEP, false, false, loader));
+				dispatchEvent(new Event(Event.COMPLETE));
+			}
 		}
 		// unload
 		public function unload():void {
