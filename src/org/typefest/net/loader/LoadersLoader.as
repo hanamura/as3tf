@@ -46,6 +46,39 @@ package org.typefest.net.loader {
 
 			return data;
 		}
+
+		// length
+		public function get length():int { return _loaders.length }
+		public function get lengthLoaded():int {
+			var count:int = 0;
+
+			for each (var loader:ILoader in _loaders) {
+				if (loader.loaded) {
+					count++;
+				}
+			}
+			return count;
+		}
+		public function get lengthLoading():int {
+			var count:int = 0;
+
+			for each (var loader:ILoader in _loaders) {
+				if (loader.loading) {
+					count++;
+				}
+			}
+			return count;
+		}
+		public function get lengthWaiting():int {
+			var count:int = 0;
+
+			for each (var loader:ILoader in _loaders) {
+				if (!loader.loaded && !loader.loading) {
+					count++;
+				}
+			}
+			return count;
+		}
 		
 		
 		
