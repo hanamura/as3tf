@@ -28,6 +28,7 @@ package org.typefest.transitions.keytween {
 			if (_dest !== _) {
 				_dest = _;
 				_check();
+				dispatchEvent(new KeyTweenEvent(KeyTweenEvent.DEST_CHANGE));
 			}
 		}
 		

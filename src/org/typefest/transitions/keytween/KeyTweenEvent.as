@@ -16,6 +16,8 @@ package org.typefest.transitions.keytween {
 		static public const UPDATE:String = "KeyTweenEvent.UPDATE";
 		static public const END:String    = "KeyTweenEvent.END";
 		
+		static public const DEST_CHANGE:String = "KeyTweenEvent.DEST_CHANGE";
+		
 		
 		
 		
