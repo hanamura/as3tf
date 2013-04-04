@@ -307,9 +307,9 @@ package org.typefest.display.shape {
 			var data:Vector.<IGraphicsData> = new Vector.<IGraphicsData>();
 			
 			///// outer data
-			var outerFill:IGraphicsFill = _lineCustomData || _lineData;
+			var outerFill:IGraphicsFill = (_lineCustomData || _lineData) as IGraphicsFill;
 			var outerPath:GraphicsPath  = _getOuterPath();
-			var innerFill:IGraphicsFill = _fillCustomData || _fillData;
+			var innerFill:IGraphicsFill = (_fillCustomData || _fillData) as IGraphicsFill;
 			var innerPath:GraphicsPath  = _getInnerPath();
 			
 			///// push
